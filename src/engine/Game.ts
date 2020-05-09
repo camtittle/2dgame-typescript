@@ -4,12 +4,14 @@ import {ClickManager} from "./mouse/ClickManager";
 import {EntityManager} from "./entity/EntityManager";
 import {CanvasManager} from "./CanvasManager";
 import {DrawableManager} from "./DrawableManager";
+import {EntityClickManager} from "./entity/EntityClickManager";
 
 export default abstract class Game {
 
   private lastRender = performance.now();
 
   protected abstract resources: ImageSources;
+  protected entityClickManager: EntityClickManager;
 
   protected constructor(protected readonly entityManager: EntityManager,
                         protected readonly drawableManager: DrawableManager,
@@ -27,6 +29,8 @@ export default abstract class Game {
 
   // Lifecycle hook: setup and load things
   protected initialise() {
+    this.entityClickManager = new EntityClickManager(this.entityManager, this.clickManager)
+      .addEntityMousedownListeners();
   }
 
   protected abstract drawLoadingScreen(ctx: CanvasRenderingContext2D): void;

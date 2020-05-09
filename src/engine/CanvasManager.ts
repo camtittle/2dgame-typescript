@@ -10,6 +10,7 @@ export class CanvasManager {
   public constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
+    this.ctx.imageSmoothingEnabled = false;
   }
 
   public getWidth() {

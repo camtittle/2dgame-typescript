@@ -14,16 +14,12 @@ export abstract class Entity implements Drawable, Updatable {
   private readonly _id: string = uuidv1();
   get id() { return this._id; }
 
-  protected abstract _width: number;
-  public get width() { return this._width }
+  width: number;
+  height: number;
 
-  protected abstract _height: number;
-  public get height() { return this._height }
+  protected position: Position = {x: 0, y: 0};
 
-  public position: Position = {x: 0, y: 0};
-
-  public constructor() {
-  }
+  private mouseDownListeners: EntityClickListener[] = [];
 
   public setupImages(imageProvider: ImageProvider) {
     this.images = imageProvider.getImagesByResourceId(this.imageIds);
@@ -37,10 +33,19 @@ export abstract class Entity implements Drawable, Updatable {
     if (this.images[this.currentImageId]) {
       ctx.beginPath();
       ctx.strokeStyle = 'red';
-      ctx.rect(this.position.x, this.position.y, this._width, this._height);
+      ctx.rect(this.position.x, this.position.y, this.width, this.height);
       ctx.stroke();
-      ctx.drawImage(this.images[this.currentImageId], this.position.x, this.position.y, this._width, this._height);
+      ctx.drawImage(this.images[this.currentImageId], this.position.x, this.position.y, this.width, this.height);
     }
+  }
+
+  public getPosition(): Position {
+    return this.position;
+  }
+
+  public setPosition(position: Position) {
+    this.position.x = position.x;
+    this.position.y = position.y;
   }
 
   public contains(x: number, y: number): boolean {
@@ -49,6 +54,9 @@ export abstract class Entity implements Drawable, Updatable {
 
   // Override this to hook in to on mouse down event
   public onMouseDown(x: number, y: number): void {
+    for (let listener of this.mouseDownListeners) {
+      listener(this);
+    }
   }
 
   // Override this to hook in to mouse move event
@@ -59,4 +67,11 @@ export abstract class Entity implements Drawable, Updatable {
   public onMouseUp(x: number, y: number): void {
   }
 
+  public addMouseDownListener(listener: EntityClickListener) {
+    this.mouseDownListeners.push(listener);
   }
+
+
+}
+
+export type EntityClickListener = (entity: Entity) => void;

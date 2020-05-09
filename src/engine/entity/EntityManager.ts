@@ -20,15 +20,16 @@ export class EntityManager {
     }
   }
 
-  public spawnEntity(entity: Entity) {
+  public register(entity: Entity) {
     this.entities.push(entity);
   }
 
   public getIntersectingEntities(x: number, y: number): Entity[] {
     const entities: Entity[] = [];
     for (let entity of this.entities) {
-      if (entity.position.x < x && entity.position.x+entity.width > x &&
-        entity.position.y < y && entity.position.y+entity.height > y) {
+      const pos = entity.getPosition();
+      if (pos.x < x && pos.x+entity.width > x &&
+        pos.y < y && pos.y+entity.height > y) {
         entities.push(entity);
       }
     }
@@ -38,7 +39,9 @@ export class EntityManager {
 
   public handleMouseDown(x: number, y: number) {
     this.entities.forEach(entity => {
-      entity.onMouseDown(x, y);
+      if (entity.contains(x, y)) {
+        entity.onMouseDown(x, y);
+      }
     });
   }
 

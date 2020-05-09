@@ -1,20 +1,18 @@
 import {EntityManager} from "../engine/entity/EntityManager";
-import {PersonFactory} from "./factory/PersonFactory";
+import {HamsterFactory} from "./factory/HamsterFactory";
+import {Tile} from "../engine/board/Tile";
+import {Hamster} from "./entity/Hamster";
 
 export class EntitySpawner {
 
   public constructor(private readonly entityManager: EntityManager,
-                     private readonly personFactory: PersonFactory) {
+                     private readonly hamsterFactory: HamsterFactory) {
   }
 
-  public spawnJeremy() {
-    const jeremy = this.personFactory.createJeremy();
-    this.entityManager.spawnEntity(jeremy);
-  }
-
-  public spawnTestPerson() {
-    const testPerson = this.personFactory.createTestPerson();
-    this.entityManager.spawnEntity(testPerson);
+  public spawnHamsterOntoTile(startingTile: Tile): Hamster {
+    const hamster = this.hamsterFactory.createHamster(startingTile);
+    this.entityManager.register(hamster);
+    return hamster;
   }
 
 }

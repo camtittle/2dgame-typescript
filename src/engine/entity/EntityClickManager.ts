@@ -1,12 +1,12 @@
-import {EntityManager} from "../engine/entity/EntityManager";
-import {ClickManager} from "../engine/mouse/ClickManager";
+import {EntityManager} from "./EntityManager";
+import {ClickManager} from "../mouse/ClickManager";
 
 export class EntityClickManager {
 
   public constructor(private entityManager: EntityManager, private clickManager: ClickManager) {
   }
 
-  public addEntityMousedownListeners() {
+  public addEntityMousedownListeners(): EntityClickManager {
     this.clickManager.addMouseDownListener((x, y) => {
       this.entityManager.handleMouseDown(x, y);
     });
@@ -17,7 +17,10 @@ export class EntityClickManager {
 
     this.clickManager.addMouseUpListener((x, y) => {
       this.entityManager.handleMouseUp(x, y);
-    })
+    });
+
+    return this;
   }
+
 
 }

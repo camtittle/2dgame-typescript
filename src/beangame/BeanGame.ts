@@ -2,23 +2,21 @@ import Game from "../engine/Game";
 import {EntityManager} from "../engine/entity/EntityManager";
 import {CanvasManager} from "../engine/CanvasManager";
 import {ClickManager} from "../engine/mouse/ClickManager";
-import {UiInitializer} from "./UiInitializer";
 import {DrawableManager} from "../engine/DrawableManager";
 import {ImageSourcesProvider} from "./ImageSourcesProvider";
 import {EntitySpawner} from "./EntitySpawner";
-import {EntityClickManager} from "./EntityMouseService";
-import {NetworkManager} from "../engine/network/NetworkManager";
-import {config} from "./config";
-import {BoardManager} from "../engine/board/BoardManager";
 import {BoardBuilder} from "../engine/board/BoardBuilder";
 import {Board} from "../engine/board/Board";
 import {Position} from "../engine/interface/Position";
-import {Dimensions} from "../engine/interface/Dimensions";
 import {GrassTile} from "./tile/GrassTile";
+import {TileClickManager} from "./tile/TileClickManager";
+import {config} from "./config";
 
 export class BeanGame extends Game {
 
   protected resources = new ImageSourcesProvider().getImageSources();
+
+  private tileClickManager = new TileClickManager();
 
   public constructor(entityManager: EntityManager, drawableManager: DrawableManager, canvasManager: CanvasManager,
                      clickManager: ClickManager, private entitySpawner: EntitySpawner,
@@ -29,35 +27,39 @@ export class BeanGame extends Game {
   public async initialise() {
     super.initialise();
 
-    this.entitySpawner.spawnJeremy();
-    this.entitySpawner.spawnTestPerson();
+    // const networkManager = new NetworkManager(config.websocketUrl).connect(() => {
+    //   networkManager.send({action: 'hello'});
+    // });
 
-    const entityClickManager = new EntityClickManager(this.entityManager, this.clickManager);
-    entityClickManager.addEntityMousedownListeners();
+    const board = this.buildBoard();
 
-    const uiInitializer = new UiInitializer(this.canvasManager, this.drawableManager);
-    uiInitializer.initUi();
+    this.spawnHamsterOntoBoard(board);
 
-    const networkManager = new NetworkManager(config.websocketUrl).connect(() => {
-      networkManager.send({action: 'hello'});
-    });
-
-    const boardManager = new BoardManager(this.buildBoard());
-    this.drawableManager.registerDrawable(boardManager.board);
   }
 
   private buildBoard(): Board {
     const dimen = this.canvasManager.getScaledDimensions();
 
-    const tileFactory = (position: Position, dimensions: Dimensions) => {
-      return new GrassTile(position, dimensions);
+    const tileFactory = (position: Position) => {
+      return new GrassTile(position);
     };
 
-    return this.boardBuilder
+    const board = this.boardBuilder
       .withGameDimensions(this.canvasManager.getWidth(), this.canvasManager.getHeight())
-      .withTileDimensions(5, 5)
+      .withTileDimensions(config.boardWidth, config.boardHeight)
       .populatedWithTile(tileFactory)
+      .withEntityManager(this.entityManager)
       .build();
+
+    this.tileClickManager.setBoard(board);
+
+    return board;
+  }
+
+  private spawnHamsterOntoBoard(board: Board) {
+    const startingTile = board.getTile({x: 0, y: 0});
+    const spawnedHamster = this.entitySpawner.spawnHamsterOntoTile(startingTile);
+    this.tileClickManager.registerHamsterBehaviour(spawnedHamster);
   }
 
   protected drawLoadingScreen(ctx: CanvasRenderingContext2D): void {

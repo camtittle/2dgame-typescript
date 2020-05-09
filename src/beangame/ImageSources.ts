@@ -1,15 +1,15 @@
 import {ImageSources} from "../engine/graphics/ImageResource";
 
 export enum resId {
-  Jeremy,
+  Grass,
   Woman1,
   Money,
   Hamster
 }
 
 export const imageSources: ImageSources = {
-  [resId.Jeremy]: {
-    src: 'res/employee.svg'
+  [resId.Grass]: {
+    src: 'res/grass.png'
   },
   [resId.Woman1]: {
     src: 'res/woman.svg'

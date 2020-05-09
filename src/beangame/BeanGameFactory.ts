@@ -5,7 +5,7 @@ import {ClickManager} from "../engine/mouse/ClickManager";
 import {ImageProvider} from "../engine/graphics/ImageProvider";
 import {DrawableManager} from "../engine/DrawableManager";
 import {EntitySpawner} from "./EntitySpawner";
-import {PersonFactory} from "./factory/PersonFactory";
+import {HamsterFactory} from "./factory/HamsterFactory";
 import {BoardBuilder} from "../engine/board/BoardBuilder";
 
 export class BeanGameFactory {
@@ -18,7 +18,7 @@ export class BeanGameFactory {
 
     const entityManager = new EntityManager();
 
-    const personFactory = new PersonFactory(imageProvider, entityManager, canvasManager);
+    const personFactory = new HamsterFactory(imageProvider);
     const entitySpawner = new EntitySpawner(entityManager, personFactory);
     const drawableManager = new DrawableManager();
     const clickManager = new ClickManager(canvasManager, entityManager);
