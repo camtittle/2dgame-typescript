@@ -31,10 +31,10 @@ export abstract class Entity implements Drawable, Updatable {
 
   public draw(ctx: CanvasRenderingContext2D): void {
     if (this.images[this.currentImageId]) {
-      ctx.beginPath();
-      ctx.strokeStyle = 'red';
-      ctx.rect(this.position.x, this.position.y, this.width, this.height);
-      ctx.stroke();
+      // ctx.beginPath();
+      // ctx.strokeStyle = 'red';
+      // ctx.rect(this.position.x, this.position.y, this.width, this.height);
+      // ctx.stroke();
       ctx.drawImage(this.images[this.currentImageId], this.position.x, this.position.y, this.width, this.height);
     }
   }

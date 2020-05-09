@@ -1,4 +1,5 @@
 import {Entity} from "./Entity";
+import {Hamster} from "../../beangame/entity/Hamster";
 
 export class EntityManager {
 

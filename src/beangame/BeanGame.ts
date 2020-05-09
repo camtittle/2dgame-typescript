@@ -58,7 +58,7 @@ export class BeanGame extends Game {
 
   private spawnHamsterOntoBoard(board: Board) {
     const startingTile = board.getTile({x: 0, y: 0});
-    const spawnedHamster = this.entitySpawner.spawnHamsterOntoTile(startingTile);
+    const spawnedHamster = this.entitySpawner.spawnHamsterOntoTile(board, startingTile);
     this.tileClickManager.registerHamsterBehaviour(spawnedHamster);
   }
 

@@ -18,7 +18,7 @@ export class TileClickManager {
     }
 
     this.board.registerTileOnClickListener(tile => {
-      hamster.setTile(tile);
+      hamster.setDestinationTile(tile);
     })
   }
 
