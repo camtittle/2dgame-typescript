@@ -3,13 +3,18 @@ import {Dimensions} from "../interface/Dimensions";
 import {ImageProvider} from "../graphics/ImageProvider";
 import {Position} from "../interface/Position";
 import {EntityManager} from "../entity/EntityManager";
+import {Intersectable} from "../interface/Intersectable";
 
-export class Board {
+export class Board implements Intersectable {
 
   private tiles: Tile[][];
   private tileDimensions: Dimensions;
-  private gameDimensions: Dimensions;
+  private eachTileDimensions: Dimensions;
+  private boardDimensions: Dimensions;
+  private boardPosition: Position = {x: 0, y: 0};
   private isometric = false;
+
+  private currentMouseOverTile: Tile;
 
   public setTiles(tiles: Tile[][]) {
     this.tiles = tiles;
@@ -22,25 +27,29 @@ export class Board {
   }
 
   public setGameDimensions(dimensions: Dimensions) {
-    this.gameDimensions = dimensions;
+    this.boardDimensions = dimensions;
+    this.updateTileSizeAndPositions();
+  }
+
+  public setBoardPosition(position: Position) {
+    this.boardPosition = position;
     this.updateTileSizeAndPositions();
   }
 
   // Recalculate size of each tile to fit tiles horizontally
   private updateTileSizeAndPositions() {
-    if (this.gameDimensions && this.tileDimensions && this.tiles) {
-      const tileWidth = this.gameDimensions.width / this.tileDimensions.width;
+    if (this.boardDimensions && this.tileDimensions && this.boardPosition && this.tiles) {
+
+      const tileWidth = this.boardDimensions.width / this.tileDimensions.width;
+      const tileHeight = tileWidth / 2;
+      this.eachTileDimensions = {width: tileWidth, height: tileHeight};
+
       this.forEachTile((tile, x, y) => {
+        const tileXPos = tileWidth/2 * (x-y-1) + (this.boardDimensions.width/2) + this.boardPosition.x;
+        const tileYPos = tileHeight/2 * (x+y) + this.boardPosition.y;
 
-        if (this.isometric) {
-          const tileHeight = tileWidth / 2;
-          tile.setPosition({x: tileWidth/2 * (x-y-1) + (this.gameDimensions.width/2), y: tileHeight/2 * (x+y)});
-          tile.setSize(tileWidth, tileHeight);
-
-        } else {
-          tile.setPosition({x: x*tileWidth, y: y*tileWidth});
-          tile.setSize(tileWidth);
-        }
+        tile.setPosition({x: tileXPos, y: tileYPos});
+        tile.setSize(tileWidth, tileHeight);
 
       })
     }
@@ -61,8 +70,8 @@ export class Board {
   }
 
   public getTile(coords: Position) {
-    if (coords.x > this.tileDimensions.width || coords.y > this.tileDimensions.height) {
-      throw new Error('Tile out of bounds: Cannot get tile with coords ' + JSON.stringify(coords));
+    if (coords.x >= this.tileDimensions.width || coords.y >= this.tileDimensions.height) {
+      return null;
     }
 
     return this.tiles[coords.x][coords.y];
@@ -83,6 +92,51 @@ export class Board {
   public setIsometric(isometric: boolean) {
     this.isometric = isometric;
     this.updateTileSizeAndPositions();
+  }
+
+  public onMouseMove(x: number, y: number) {
+    const newMouseOverTile = this.getTileAtPosition(x, y);
+    const isNewTile = this.currentMouseOverTile !== newMouseOverTile;
+
+    if (newMouseOverTile && isNewTile) {
+      newMouseOverTile.onMouseOver(x, y);
+    }
+
+    if (this.currentMouseOverTile && isNewTile) {
+      this.currentMouseOverTile.onMouseOff(x, y);
+    }
+
+    this.currentMouseOverTile = newMouseOverTile;
+  }
+
+  public onMouseDown(x: number, y: number) {
+    const tile = this.getTileAtPosition(x, y);
+    tile.onMouseDown(x, y);
+  }
+
+  private getTileAtPosition(x: number, y: number): Tile {
+    if (!this.intersects(x, y)) {
+      return null;
+    }
+
+    const tileWidthHalf = this.eachTileDimensions.width / 2;
+    const tileHeightHalf = this.eachTileDimensions.height / 2;
+    // const tileX = (x / tileWidthHalf + y / tileHeightHalf) / 2;
+    x -= tileWidthHalf;
+    const xComponent = ((x - this.boardDimensions.width/2 - this.boardPosition.x) / tileWidthHalf);
+    const yComponent = ((y - this.boardPosition.y) / tileHeightHalf);
+    const tileY = (yComponent - xComponent - 1) / 2;
+    const tileX = (xComponent + yComponent + 1) / 2;
+
+    if (tileX < 0 || tileY < 0) {
+      return null;
+    }
+
+    return this.getTile({x: Math.trunc(tileX), y: Math.trunc(tileY)});
+  }
+
+  intersects(x: number, y: number): boolean {
+    return y > this.boardPosition.y && y < this.boardPosition.y + this.boardDimensions.height && x > this.boardPosition.x && x < this.boardPosition.x + this.boardDimensions.width;
   }
 
 }

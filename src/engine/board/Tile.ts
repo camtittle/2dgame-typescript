@@ -21,5 +21,8 @@ export abstract class Tile extends Entity {
     this.height = height === undefined ? width : height;
   }
 
+  public onMouseOver(x: number, y: number): void {
+  }
+
 }
 

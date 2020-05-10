@@ -5,32 +5,48 @@ import {EntityManager} from "./entity/EntityManager";
 import {CanvasManager} from "./CanvasManager";
 import {DrawableManager} from "./DrawableManager";
 import {EntityClickManager} from "./entity/EntityClickManager";
+import {ImageProvider} from "./graphics/ImageProvider";
 
 export default abstract class Game {
 
   private lastRender = performance.now();
 
   protected abstract resources: ImageSources;
+  protected entityManager: EntityManager;
+  protected drawableManager: DrawableManager;
+  protected canvasManager: CanvasManager;
   protected entityClickManager: EntityClickManager;
+  protected clickManager: ClickManager;
+  protected imageProvider: ImageProvider;
+  protected imageLoader: ImageLoader;
 
-  protected constructor(protected readonly entityManager: EntityManager,
-                        protected readonly drawableManager: DrawableManager,
-                        protected readonly canvasManager: CanvasManager,
-                        protected readonly clickManager:  ClickManager) {
+  public constructor(canvasElementId: string) {
+    let canvas;
+    try {
+      canvas = <HTMLCanvasElement>document.getElementById(canvasElementId);
+    } catch {
+      throw new Error("Cannot find canvas element with ID: " + canvasElementId);
+    }
+    this.entityManager = new EntityManager();
+    this.drawableManager = new DrawableManager();
+    this.canvasManager = new CanvasManager(canvas);
+    this.clickManager = new ClickManager(this.canvasManager, this.entityManager);
+    this.imageProvider = new ImageProvider();
+    this.imageLoader = new ImageLoader(this.imageProvider);
   }
 
   // Main entry point
-  public async boot(imageLoader: ImageLoader): Promise<void> {
+  public async boot(): Promise<void> {
     this.drawLoadingScreen(this.canvasManager.getContext());
-    await this.loadImages(imageLoader);
+    await this.loadImages(this.imageLoader);
     this.initialise();
-    this.start();
+    this.startGameLoop();
   }
 
   // Lifecycle hook: setup and load things
   protected initialise() {
-    this.entityClickManager = new EntityClickManager(this.entityManager, this.clickManager)
-      .addEntityMousedownListeners();
+    // this.entityClickManager = new EntityClickManager(this.entityManager, this.clickManager)
+    //   .addEntityMousedownListeners();
   }
 
   protected abstract drawLoadingScreen(ctx: CanvasRenderingContext2D): void;
@@ -40,7 +56,7 @@ export default abstract class Game {
   }
 
   // Lifecycle hook: starts the game
-  protected start(): void {
+  protected startGameLoop(): void {
     window.requestAnimationFrame(this.loop.bind(this));
   }
 

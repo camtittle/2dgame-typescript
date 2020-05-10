@@ -8,7 +8,7 @@ export class EntityClickManager {
 
   public addEntityMousedownListeners(): EntityClickManager {
     this.clickManager.addMouseDownListener((x, y) => {
-      this.entityManager.handleMouseDown(x, y);
+      //this.entityManager.handleMouseDown(x, y);
     });
 
     this.clickManager.addMouseMoveListener((x, y) => {

@@ -10,23 +10,37 @@ export class GrassTile extends Tile {
   draw(ctx: CanvasRenderingContext2D): void {
     super.draw(ctx);
     if (this.highlightBorder) {
-      ctx.beginPath();
-      ctx.strokeStyle = 'white';
-      ctx.moveTo(this.position.x + this.width/2, this.position.y);
-      ctx.lineTo(this.position.x + this.width, this.position.y + this.height / 2);
-      ctx.moveTo(this.position.x + this.width, this.position.y + this.height / 2);
-      ctx.lineTo(this.position.x + this.width/2, this.position.y + this.height);
-      ctx.moveTo(this.position.x + this.width/2, this.position.y + this.height);
-      ctx.lineTo(this.position.x, this.position.y + this.height/2);
-      ctx.moveTo(this.position.x, this.position.y + this.height/2);
-      ctx.lineTo(this.position.x + this.width/2, this.position.y);
-      ctx.stroke();
+      this.drawOutline(ctx, 'white');
     }
   }
 
   setHighlight(highlight: boolean) {
     this.highlightBorder = highlight;
-    this.setZIndex(2);
+    this.setZIndex(highlight ? 1 : 0);
+  }
+
+  private drawOutline(ctx: CanvasRenderingContext2D, strokeStyle: string) {
+    ctx.beginPath();
+    ctx.strokeStyle = strokeStyle;
+    ctx.moveTo(this.position.x + this.width/2, this.position.y);
+    ctx.lineTo(this.position.x + this.width, this.position.y + this.height / 2);
+    ctx.moveTo(this.position.x + this.width, this.position.y + this.height / 2);
+    ctx.lineTo(this.position.x + this.width/2, this.position.y + this.height);
+    ctx.moveTo(this.position.x + this.width/2, this.position.y + this.height);
+    ctx.lineTo(this.position.x, this.position.y + this.height/2);
+    ctx.moveTo(this.position.x, this.position.y + this.height/2);
+    ctx.lineTo(this.position.x + this.width/2, this.position.y);
+    ctx.stroke();
+  }
+
+  onMouseOver(x: number, y: number): void {
+    super.onMouseOver(x, y);
+    this.setHighlight(true);
+  }
+
+  onMouseOff(x: number, y: number): void {
+    super.onMouseOff(x, y);
+    this.setHighlight(false);
   }
 
 }

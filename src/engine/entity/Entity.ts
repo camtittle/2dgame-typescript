@@ -68,8 +68,11 @@ export abstract class Entity implements Drawable, Updatable {
   public onMouseMove(x: number, y: number): void {
   }
 
-  // Override this to hook in to mouse move event
+  // Override this to hook in to mouse up event
   public onMouseUp(x: number, y: number): void {
+  }
+
+  public onMouseOff(x: number, y: number): void {
   }
 
   public addMouseDownListener(listener: EntityClickListener) {
@@ -84,6 +87,7 @@ export abstract class Entity implements Drawable, Updatable {
   public getZIndex() {
     return this.zIndex;
   }
+
 
 }
 

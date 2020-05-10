@@ -4,6 +4,7 @@ import {Dimensions} from "../interface/Dimensions";
 import {Position} from "../interface/Position";
 import {ImageProvider} from "../graphics/ImageProvider";
 import {EntityManager} from "../entity/EntityManager";
+import {ClickManager} from "../mouse/ClickManager";
 
 export class BoardBuilder {
 
@@ -14,6 +15,7 @@ export class BoardBuilder {
   private tileGeneratorFn: (width: number, height: number) => Tile[][];
   private imageProvider: ImageProvider;
   private entityManager: EntityManager;
+  private clickManager: ClickManager;
   private isometric = false;
 
   constructor(imageProvider: ImageProvider) {
@@ -34,6 +36,11 @@ export class BoardBuilder {
 
   withEntityManager(entityManager: EntityManager) {
     this.entityManager = entityManager;
+    return this;
+  }
+
+  withClickManager(clickManager: ClickManager) {
+    this.clickManager = clickManager;
     return this;
   }
 
@@ -67,6 +74,16 @@ export class BoardBuilder {
     board.setTiles(this.tileGeneratorFn(this.tileWidth, this.tileHeight));
     board.setupTileImages(this.imageProvider);
     board.setIsometric(this.isometric);
+
+    if (this.clickManager) {
+      this.clickManager.addMouseMoveListener((x, y) => {
+        board.onMouseMove(x, y);
+      });
+
+      this.clickManager.addMouseDownListener((x, y) => {
+        board.onMouseDown(x, y);
+      })
+    }
 
     if (this.entityManager) {
       board.registerTilesAsEntities(this.entityManager);

@@ -18,11 +18,11 @@ export class TileClickManager {
       throw new Error('Cannot register tile hover behaviour. No board set');
     }
 
-    this.board.registerTileOnClickListener(tile => {
-      if (tile instanceof GrassTile) {
-        tile.setHighlight(true);
-      }
-    })
+    // this.board.registerTileOnClickListener(tile => {
+    //   if (tile instanceof GrassTile) {
+    //     tile.setHighlight(true);
+    //   }
+    // })
   }
 
   public registerHamsterBehaviour(hamster: Hamster) {
