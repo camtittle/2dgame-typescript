@@ -69,7 +69,6 @@ export class Board {
   }
 
   public registerTileOnClickListener(listener: (tile: Tile) => void) {
-    console.log('registerTileOnClickListener');
     this.forEachTile(tile => {
       tile.addMouseDownListener(listener);
     })

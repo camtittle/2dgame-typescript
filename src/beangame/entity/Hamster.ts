@@ -1,20 +1,14 @@
 import {resId} from "../ImageSources";
 import {TileBoundEntity} from "../../engine/entity/TileBoundEntity";
-import {Tile} from "../../engine/board/Tile";
-import {Board} from "../../engine/board/Board";
+import {EntityManager} from "../../engine/entity/EntityManager";
 
 export class Hamster extends TileBoundEntity {
 
   imageIds = [resId.Hamster];
 
-  constructor(board: Board, startingTile: Tile) {
-    super();
-    this.setBoard(board);
-    this.setTile(startingTile);
-  }
-
-  public draw(ctx: CanvasRenderingContext2D): void {
-    super.draw(ctx);
+  constructor(protected entityManager: EntityManager) {
+    super(entityManager);
+    this.setZIndex(99999);
   }
 
 }

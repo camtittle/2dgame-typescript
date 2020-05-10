@@ -3,7 +3,10 @@ import {Hamster} from "../../beangame/entity/Hamster";
 
 export class EntityManager {
 
+  // Entities stores sorted by zIndex
   public entities: Entity[] = [];
+
+  private shouldRefreshZIndeces = false;
 
   public constructor() {
     this.entities = [];
@@ -16,6 +19,10 @@ export class EntityManager {
   }
 
   public updateEntities(progress: number): void {
+    if (this.shouldRefreshZIndeces) {
+      this.sortEntitiesByZIndex();
+    }
+
     for (let entity of this.entities) {
       entity.update(progress);
     }
@@ -23,6 +30,15 @@ export class EntityManager {
 
   public register(entity: Entity) {
     this.entities.push(entity);
+    this.refreshZIndecesOnNextUpdate();
+  }
+
+  public sortEntitiesByZIndex() {
+    // Keep entities sorted by z-index
+    this.entities.sort((a, b) => {
+      return a.getZIndex() - b.getZIndex();
+    });
+    this.shouldRefreshZIndeces = false;
   }
 
   public getIntersectingEntities(x: number, y: number): Entity[] {
@@ -56,6 +72,11 @@ export class EntityManager {
     this.entities.forEach(entity => {
         entity.onMouseMove(x, y);
     });
+  }
+
+  // Notifies EntityManager to resort the entity list by Z-index on next update
+  public refreshZIndecesOnNextUpdate() {
+    this.shouldRefreshZIndeces = true;
   }
 
 }

@@ -4,13 +4,14 @@ import {CanvasManager} from "../engine/CanvasManager";
 import {ClickManager} from "../engine/mouse/ClickManager";
 import {DrawableManager} from "../engine/DrawableManager";
 import {ImageSourcesProvider} from "./ImageSourcesProvider";
-import {EntitySpawner} from "./EntitySpawner";
 import {BoardBuilder} from "../engine/board/BoardBuilder";
 import {Board} from "../engine/board/Board";
 import {Position} from "../engine/interface/Position";
 import {GrassTile} from "./tile/GrassTile";
 import {TileClickManager} from "./tile/TileClickManager";
 import {config} from "./config";
+import {HamsterSpawner} from "./factory/HamsterSpawner";
+import {ImageProvider} from "../engine/graphics/ImageProvider";
 
 export class BeanGame extends Game {
 
@@ -19,8 +20,7 @@ export class BeanGame extends Game {
   private tileClickManager = new TileClickManager();
 
   public constructor(entityManager: EntityManager, drawableManager: DrawableManager, canvasManager: CanvasManager,
-                     clickManager: ClickManager, private entitySpawner: EntitySpawner,
-                     private boardBuilder: BoardBuilder) {
+                     clickManager: ClickManager, private imageProvider: ImageProvider, private boardBuilder: BoardBuilder) {
     super(entityManager, drawableManager, canvasManager, clickManager);
   }
 
@@ -41,7 +41,7 @@ export class BeanGame extends Game {
     const dimen = this.canvasManager.getScaledDimensions();
 
     const tileFactory = (position: Position) => {
-      return new GrassTile(position);
+      return new GrassTile(this.entityManager, position);
     };
 
     const board = this.boardBuilder
@@ -53,13 +53,15 @@ export class BeanGame extends Game {
       .build();
 
     this.tileClickManager.setBoard(board);
+    this.tileClickManager.registerTileHoverBehaviour();
 
     return board;
   }
 
   private spawnHamsterOntoBoard(board: Board) {
     const startingTile = board.getTile({x: 0, y: 0});
-    const spawnedHamster = this.entitySpawner.spawnHamsterOntoTile(board, startingTile);
+    const hamsterSpawner = new HamsterSpawner(this.entityManager, this.imageProvider);
+    const spawnedHamster = hamsterSpawner.spawnHamster(board, startingTile);
     this.tileClickManager.registerHamsterBehaviour(spawnedHamster);
   }
 

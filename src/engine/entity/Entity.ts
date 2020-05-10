@@ -4,12 +4,14 @@ import {Updatable} from "../interface/Updatable";
 import {ImagesById} from "../graphics/ImageResource";
 import {ImageProvider} from "../graphics/ImageProvider";
 import {Position} from "../interface/Position";
+import {EntityManager} from "./EntityManager";
 
 export abstract class Entity implements Drawable, Updatable {
 
   protected abstract imageIds: number[];
   protected images: ImagesById;
   protected currentImageId: number;
+  private zIndex = 0;
 
   private readonly _id: string = uuidv1();
   get id() { return this._id; }
@@ -20,6 +22,9 @@ export abstract class Entity implements Drawable, Updatable {
   protected position: Position = {x: 0, y: 0};
 
   private mouseDownListeners: EntityClickListener[] = [];
+
+  constructor(protected entityManager: EntityManager) {
+  }
 
   public setupImages(imageProvider: ImageProvider) {
     this.images = imageProvider.getImagesByResourceId(this.imageIds);
@@ -71,6 +76,14 @@ export abstract class Entity implements Drawable, Updatable {
     this.mouseDownListeners.push(listener);
   }
 
+  public setZIndex(z: number) {
+    this.zIndex = z;
+    this.entityManager.refreshZIndecesOnNextUpdate();
+  }
+
+  public getZIndex() {
+    return this.zIndex;
+  }
 
 }
 
