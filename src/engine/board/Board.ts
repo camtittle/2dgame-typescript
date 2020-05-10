@@ -1,6 +1,5 @@
 import {Tile} from "./Tile";
 import {Dimensions} from "../interface/Dimensions";
-import {Drawable} from "../interface/Drawable";
 import {ImageProvider} from "../graphics/ImageProvider";
 import {Position} from "../interface/Position";
 import {EntityManager} from "../entity/EntityManager";
@@ -10,6 +9,7 @@ export class Board {
   private tiles: Tile[][];
   private tileDimensions: Dimensions;
   private gameDimensions: Dimensions;
+  private isometric = false;
 
   public setTiles(tiles: Tile[][]) {
     this.tiles = tiles;
@@ -29,10 +29,19 @@ export class Board {
   // Recalculate size of each tile to fit tiles horizontally
   private updateTileSizeAndPositions() {
     if (this.gameDimensions && this.tileDimensions && this.tiles) {
-      const tileSize = this.gameDimensions.width / this.tileDimensions.width;
+      const tileWidth = this.gameDimensions.width / this.tileDimensions.width;
       this.forEachTile((tile, x, y) => {
-        tile.setPosition({x: x*tileSize, y: y*tileSize});
-        tile.setSize(tileSize);
+
+        if (this.isometric) {
+          const tileHeight = tileWidth / 2;
+          tile.setPosition({x: tileWidth/2 * (x-y-1) + (this.gameDimensions.width/2), y: tileHeight/2 * (x+y)});
+          tile.setSize(tileWidth, tileHeight);
+
+        } else {
+          tile.setPosition({x: x*tileWidth, y: y*tileWidth});
+          tile.setSize(tileWidth);
+        }
+
       })
     }
   }
@@ -70,6 +79,11 @@ export class Board {
     this.forEachTile(tile => {
       entityManager.register(tile);
     })
+  }
+
+  public setIsometric(isometric: boolean) {
+    this.isometric = isometric;
+    this.updateTileSizeAndPositions();
   }
 
 }

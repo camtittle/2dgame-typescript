@@ -9,7 +9,7 @@ export enum resId {
 
 export const imageSources: ImageSources = {
   [resId.Grass]: {
-    src: 'res/grass.png'
+    src: 'res/grass-iso.png'
   },
   [resId.Woman1]: {
     src: 'res/woman.svg'
@@ -18,6 +18,6 @@ export const imageSources: ImageSources = {
     src: 'res/pound-sterling.svg'
   },
   [resId.Hamster]: {
-    src: 'res/hamster.svg'
+    src: 'res/hamster-iso.png'
   }
 };

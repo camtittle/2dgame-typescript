@@ -5,7 +5,7 @@ export class CanvasManager {
   private readonly canvas: HTMLCanvasElement;
   private readonly ctx: CanvasRenderingContext2D;
 
-  private readonly bgColor = "#cccccc";
+  private readonly bgColor = "#000";
 
   public constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;

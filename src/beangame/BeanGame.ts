@@ -49,6 +49,7 @@ export class BeanGame extends Game {
       .withTileDimensions(config.boardWidth, config.boardHeight)
       .populatedWithTile(tileFactory)
       .withEntityManager(this.entityManager)
+      .isIsometric()
       .build();
 
     this.tileClickManager.setBoard(board);

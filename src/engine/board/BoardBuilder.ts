@@ -14,6 +14,7 @@ export class BoardBuilder {
   private tileGeneratorFn: (width: number, height: number) => Tile[][];
   private imageProvider: ImageProvider;
   private entityManager: EntityManager;
+  private isometric = false;
 
   constructor(imageProvider: ImageProvider) {
     this.imageProvider = imageProvider;
@@ -33,6 +34,11 @@ export class BoardBuilder {
 
   withEntityManager(entityManager: EntityManager) {
     this.entityManager = entityManager;
+    return this;
+  }
+
+  isIsometric() {
+    this.isometric = true;
     return this;
   }
 
@@ -60,6 +66,7 @@ export class BoardBuilder {
     board.setGameDimensions({ width: this.guWidth, height: this.guHeight });
     board.setTiles(this.tileGeneratorFn(this.tileWidth, this.tileHeight));
     board.setupTileImages(this.imageProvider);
+    board.setIsometric(this.isometric);
 
     if (this.entityManager) {
       board.registerTilesAsEntities(this.entityManager);

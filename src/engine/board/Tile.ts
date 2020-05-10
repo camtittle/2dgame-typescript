@@ -1,6 +1,5 @@
 import {Entity} from "../entity/Entity";
 import {Position} from "../interface/Position";
-import {Dimensions} from "../interface/Dimensions";
 
 export abstract class Tile extends Entity {
 
@@ -16,9 +15,9 @@ export abstract class Tile extends Entity {
     return {x: this.coords.x, y: this.coords.y};
   }
 
-  public setSize(widthHeight: number) {
-    this.width = widthHeight;
-    this.height = widthHeight;
+  public setSize(width: number, height?: number) {
+    this.width = width;
+    this.height = height === undefined ? width : height;
   }
 
 }

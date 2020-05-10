@@ -9,7 +9,7 @@ export abstract class TileBoundEntity extends Entity {
   private board: Board;
   private currentTile: Tile;
   private destinationTile: Tile;
-  protected speedTilesPerSecond = 3;
+  protected speedTilesPerSecond = 10;
   private timeSinceLastMove = 0;
 
   public setDestinationTile(tile: Tile) {
