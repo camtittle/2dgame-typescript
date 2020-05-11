@@ -1,16 +1,16 @@
-import {EntityManager} from "../entity/EntityManager";
+import {IsometricEntityManager} from "../entity/IsometricEntityManager";
 import {CanvasManager} from "../CanvasManager";
 
 export class ClickManager {
 
   private readonly canvasManager: CanvasManager;
-  private readonly entityManager: EntityManager;
+  private readonly entityManager: IsometricEntityManager;
 
   private mouseDownListeners: Listener[] = [];
   private mouseMoveListeners: Listener[] = [];
   private mouseUpListeners: Listener[] = [];
 
-  constructor(canvasManager: CanvasManager, entityManager: EntityManager) {
+  constructor(canvasManager: CanvasManager, entityManager: IsometricEntityManager) {
     this.canvasManager = canvasManager;
     this.entityManager = entityManager;
 

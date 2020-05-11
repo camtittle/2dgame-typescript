@@ -1,12 +1,11 @@
-import {Board} from "./Board";
+import {IsometricBoard} from "./IsometricBoard";
 import {Tile} from "./Tile";
-import {Dimensions} from "../interface/Dimensions";
 import {Position} from "../interface/Position";
 import {ImageProvider} from "../graphics/ImageProvider";
-import {EntityManager} from "../entity/EntityManager";
 import {ClickManager} from "../mouse/ClickManager";
+import {DrawableManager} from "../DrawableManager";
 
-export class BoardBuilder {
+export class IsometricBoardBuilder {
 
   private tileWidth: number;
   private tileHeight: number;
@@ -14,13 +13,9 @@ export class BoardBuilder {
   private guHeight: number;
   private tileGeneratorFn: (width: number, height: number) => Tile[][];
   private imageProvider: ImageProvider;
-  private entityManager: EntityManager;
+  private drawableManager: DrawableManager;
   private clickManager: ClickManager;
   private isometric = false;
-
-  constructor(imageProvider: ImageProvider) {
-    this.imageProvider = imageProvider;
-  }
 
   withTileDimensions(tileWidth: number, tileHeight: number) {
     this.tileWidth = tileWidth;
@@ -34,13 +29,18 @@ export class BoardBuilder {
     return this;
   }
 
-  withEntityManager(entityManager: EntityManager) {
-    this.entityManager = entityManager;
+  withDrawableManager(drawableManager: DrawableManager) {
+    this.drawableManager = drawableManager;
     return this;
   }
 
   withClickManager(clickManager: ClickManager) {
     this.clickManager = clickManager;
+    return this;
+  }
+
+  withImageProvider(imageProvider: ImageProvider) {
+    this.imageProvider = imageProvider;
     return this;
   }
 
@@ -63,17 +63,24 @@ export class BoardBuilder {
     return this;
   }
 
-  build(): Board {
+  build(): IsometricBoard {
     if (!this.tileHeight || !this.tileWidth || !this.guHeight || !this.guWidth || !this.tileGeneratorFn) {
       throw new Error("Cannot build board - missing parameters");
     }
 
-    const board = new Board();
+    if (!this.imageProvider) {
+      throw new Error("Cannot build IsometricBoard without ImageProvider");
+    }
+
+    if (!this.drawableManager) {
+      console.warn("Building IsometricBoard without a DrawableManager - board may not be drawn");
+    }
+
+    const board = new IsometricBoard();
     board.setTileDimensions({ width: this.tileWidth, height: this.tileHeight});
     board.setGameDimensions({ width: this.guWidth, height: this.guHeight });
     board.setTiles(this.tileGeneratorFn(this.tileWidth, this.tileHeight));
     board.setupTileImages(this.imageProvider);
-    board.setIsometric(this.isometric);
 
     if (this.clickManager) {
       this.clickManager.addMouseMoveListener((x, y) => {
@@ -82,11 +89,11 @@ export class BoardBuilder {
 
       this.clickManager.addMouseDownListener((x, y) => {
         board.onMouseDown(x, y);
-      })
+      });
     }
 
-    if (this.entityManager) {
-      board.registerTilesAsEntities(this.entityManager);
+    if (this.drawableManager) {
+      this.drawableManager.registerDrawable(board);
     }
 
     return board;

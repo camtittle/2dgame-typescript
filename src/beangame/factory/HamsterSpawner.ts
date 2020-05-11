@@ -1,17 +1,16 @@
 import {ImageProvider} from "../../engine/graphics/ImageProvider";
 import {Hamster} from "../entity/Hamster";
 import {Tile} from "../../engine/board/Tile";
-import {Board} from "../../engine/board/Board";
-import {EntityManager} from "../../engine/entity/EntityManager";
+import {IsometricBoard} from "../../engine/board/IsometricBoard";
+import {IsometricEntityManager} from "../../engine/entity/IsometricEntityManager";
 
 export class HamsterSpawner {
 
-  public constructor(private entityManager: EntityManager, private imageProvider: ImageProvider) {
+  public constructor(private entityManager: IsometricEntityManager, private imageProvider: ImageProvider) {
   }
 
-  public spawnHamster(board: Board, startingTile: Tile): Hamster {
-    const hamster = new Hamster(this.entityManager);
-    hamster.setBoard(board);
+  public spawnHamster(board: IsometricBoard, startingTile: Tile): Hamster {
+    const hamster = new Hamster(board, this.entityManager);
     hamster.setTile(startingTile);
     hamster.setupImages(this.imageProvider);
     this.entityManager.register(hamster);

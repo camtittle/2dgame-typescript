@@ -2,17 +2,17 @@ import {Tile} from "./Tile";
 import {Dimensions} from "../interface/Dimensions";
 import {ImageProvider} from "../graphics/ImageProvider";
 import {Position} from "../interface/Position";
-import {EntityManager} from "../entity/EntityManager";
 import {Intersectable} from "../interface/Intersectable";
+import {Drawable} from "../interface/Drawable";
+import {MouseBehaviour} from "../interface/MouseBehaviour";
 
-export class Board implements Intersectable {
+export class IsometricBoard implements Drawable, Intersectable {
 
   private tiles: Tile[][];
   private tileDimensions: Dimensions;
   private eachTileDimensions: Dimensions;
   private boardDimensions: Dimensions;
   private boardPosition: Position = {x: 0, y: 0};
-  private isometric = false;
 
   private currentMouseOverTile: Tile;
 
@@ -55,6 +55,15 @@ export class Board implements Intersectable {
     }
   }
 
+  draw(context: CanvasRenderingContext2D) {
+    this.forEachTile(tile => {
+      tile.draw(context);
+    });
+    this.forEachTile(tile => {
+      tile.drawOverlay(context);
+    });
+  }
+
   public setupTileImages(imageProvider: ImageProvider) {
     this.forEachTile(tile => {
       tile.setupImages(imageProvider);
@@ -77,21 +86,10 @@ export class Board implements Intersectable {
     return this.tiles[coords.x][coords.y];
   }
 
-  public registerTileOnClickListener(listener: (tile: Tile) => void) {
+  public addTileMouseDownBehaviour(behaviour: MouseBehaviour) {
     this.forEachTile(tile => {
-      tile.addMouseDownListener(listener);
-    })
-  }
-
-  public registerTilesAsEntities(entityManager: EntityManager) {
-    this.forEachTile(tile => {
-      entityManager.register(tile);
-    })
-  }
-
-  public setIsometric(isometric: boolean) {
-    this.isometric = isometric;
-    this.updateTileSizeAndPositions();
+      tile.addMouseDownBehaviour(behaviour);
+    });
   }
 
   public onMouseMove(x: number, y: number) {
@@ -99,11 +97,11 @@ export class Board implements Intersectable {
     const isNewTile = this.currentMouseOverTile !== newMouseOverTile;
 
     if (newMouseOverTile && isNewTile) {
-      newMouseOverTile.onMouseOver(x, y);
+      newMouseOverTile.triggerMouseEnter(x, y);
     }
 
     if (this.currentMouseOverTile && isNewTile) {
-      this.currentMouseOverTile.onMouseOff(x, y);
+      this.currentMouseOverTile.triggerMouseLeave(x, y);
     }
 
     this.currentMouseOverTile = newMouseOverTile;
@@ -111,7 +109,7 @@ export class Board implements Intersectable {
 
   public onMouseDown(x: number, y: number) {
     const tile = this.getTileAtPosition(x, y);
-    tile.onMouseDown(x, y);
+    tile.triggerMouseDown(x, y);
   }
 
   private getTileAtPosition(x: number, y: number): Tile {

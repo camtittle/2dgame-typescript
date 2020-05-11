@@ -1,7 +1,7 @@
 import Game from "../engine/Game";
 import {ImageSourcesProvider} from "./ImageSourcesProvider";
-import {BoardBuilder} from "../engine/board/BoardBuilder";
-import {Board} from "../engine/board/Board";
+import {IsometricBoardBuilder} from "../engine/board/IsometricBoardBuilder";
+import {IsometricBoard} from "../engine/board/IsometricBoard";
 import {Position} from "../engine/interface/Position";
 import {GrassTile} from "./tile/GrassTile";
 import {TileClickManager} from "./tile/TileClickManager";
@@ -13,7 +13,7 @@ export class BeanGame extends Game {
   protected resources = new ImageSourcesProvider().getImageSources();
 
   private tileClickManager = new TileClickManager();
-  private board: Board;
+  private board: IsometricBoard;
 
   public async initialise() {
     super.initialise();
@@ -31,20 +31,19 @@ export class BeanGame extends Game {
     const dimen = this.canvasManager.getScaledDimensions();
 
     const tileFactory = (position: Position) => {
-      return new GrassTile(this.entityManager, position);
+      return new GrassTile(position);
     };
 
-    this.board = new BoardBuilder(this.imageProvider)
+    this.board = new IsometricBoardBuilder()
       .withGameDimensions(this.canvasManager.getWidth(), this.canvasManager.getHeight())
       .withTileDimensions(config.boardWidth, config.boardHeight)
       .populatedWithTile(tileFactory)
-      .withEntityManager(this.entityManager)
       .withClickManager(this.clickManager)
-      .isIsometric()
+      .withImageProvider(this.imageProvider)
+      .withDrawableManager(this.drawableManager)
       .build();
 
     this.tileClickManager.setBoard(this.board);
-    this.tileClickManager.registerTileHoverBehaviour();
   }
 
   private spawnHamsterOntoBoard() {

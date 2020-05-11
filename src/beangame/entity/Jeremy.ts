@@ -1,7 +1,7 @@
-import {Entity} from "../../engine/entity/Entity";
+import {TileBoundIsometricEntity} from "../../engine/entity/TileBoundIsometricEntity";
 import {resId} from "../ImageSources";
 
-export default class Jeremy extends Entity {
+export default class Jeremy extends TileBoundIsometricEntity {
 
   protected _height: number = 300;
   protected _width: number = 300;

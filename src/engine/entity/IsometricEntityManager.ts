@@ -1,10 +1,9 @@
-import {Entity} from "./Entity";
-import {Hamster} from "../../beangame/entity/Hamster";
+import {TileBoundIsometricEntity} from "./TileBoundIsometricEntity";
 
-export class EntityManager {
+export class IsometricEntityManager {
 
   // Entities stores sorted by zIndex
-  public entities: Entity[] = [];
+  public entities: TileBoundIsometricEntity[] = [];
 
   private shouldRefreshZIndeces = false;
 
@@ -28,7 +27,7 @@ export class EntityManager {
     }
   }
 
-  public register(entity: Entity) {
+  public register(entity: TileBoundIsometricEntity) {
     this.entities.push(entity);
     this.refreshZIndecesOnNextUpdate();
   }
@@ -41,8 +40,8 @@ export class EntityManager {
     this.shouldRefreshZIndeces = false;
   }
 
-  public getIntersectingEntities(x: number, y: number): Entity[] {
-    const entities: Entity[] = [];
+  public getIntersectingEntities(x: number, y: number): TileBoundIsometricEntity[] {
+    const entities: TileBoundIsometricEntity[] = [];
     for (let entity of this.entities) {
       const pos = entity.getPosition();
       if (pos.x < x && pos.x+entity.width > x &&
@@ -54,27 +53,7 @@ export class EntityManager {
     return entities;
   }
 
-  public handleMouseDown(x: number, y: number) {
-    this.entities.forEach(entity => {
-      if (entity.contains(x, y)) {
-        entity.onMouseDown(x, y);
-      }
-    });
-  }
-
-  public handleMouseUp(x: number, y: number) {
-    this.entities.forEach(entity => {
-        entity.onMouseUp(x, y);
-    });
-  }
-
-  public handleMouseMove(x: number, y: number) {
-    this.entities.forEach(entity => {
-        entity.onMouseMove(x, y);
-    });
-  }
-
-  // Notifies EntityManager to resort the entity list by Z-index on next update
+  // Notifies IsometricEntityManager to resort the entity list by Z-index on next update
   public refreshZIndecesOnNextUpdate() {
     this.shouldRefreshZIndeces = true;
   }

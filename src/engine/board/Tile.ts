@@ -1,15 +1,22 @@
-import {Entity} from "../entity/Entity";
 import {Position} from "../interface/Position";
-import {EntityManager} from "../entity/EntityManager";
+import {SpriteDrawable} from "../graphics/SpriteDrawable";
 
-export abstract class Tile extends Entity {
+export abstract class Tile extends SpriteDrawable {
 
   id: string;
   private coords: Position;
 
-  constructor(entityManager: EntityManager, coords: Position) {
-    super(entityManager);
+  constructor(coords: Position) {
+    super();
     this.coords = coords;
+    this.init();
+  }
+
+  protected init() {
+  }
+
+  // Second pass of drawing, called after all tiles main draw method have been called
+  drawOverlay(ctx: CanvasRenderingContext2D): void {
   }
 
   public getCoords(): Position {
@@ -21,7 +28,7 @@ export abstract class Tile extends Entity {
     this.height = height === undefined ? width : height;
   }
 
-  public onMouseOver(x: number, y: number): void {
+  public setZIndex(zIndex: number) {
   }
 
 }

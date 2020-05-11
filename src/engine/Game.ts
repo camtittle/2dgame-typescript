@@ -1,7 +1,7 @@
 import {ImageSources} from "./graphics/ImageResource";
 import {ImageLoader} from "./graphics/ImageLoader";
 import {ClickManager} from "./mouse/ClickManager";
-import {EntityManager} from "./entity/EntityManager";
+import {IsometricEntityManager} from "./entity/IsometricEntityManager";
 import {CanvasManager} from "./CanvasManager";
 import {DrawableManager} from "./DrawableManager";
 import {EntityClickManager} from "./entity/EntityClickManager";
@@ -12,10 +12,9 @@ export default abstract class Game {
   private lastRender = performance.now();
 
   protected abstract resources: ImageSources;
-  protected entityManager: EntityManager;
+  protected entityManager: IsometricEntityManager;
   protected drawableManager: DrawableManager;
   protected canvasManager: CanvasManager;
-  protected entityClickManager: EntityClickManager;
   protected clickManager: ClickManager;
   protected imageProvider: ImageProvider;
   protected imageLoader: ImageLoader;
@@ -27,7 +26,7 @@ export default abstract class Game {
     } catch {
       throw new Error("Cannot find canvas element with ID: " + canvasElementId);
     }
-    this.entityManager = new EntityManager();
+    this.entityManager = new IsometricEntityManager();
     this.drawableManager = new DrawableManager();
     this.canvasManager = new CanvasManager(canvas);
     this.clickManager = new ClickManager(this.canvasManager, this.entityManager);
@@ -45,8 +44,6 @@ export default abstract class Game {
 
   // Lifecycle hook: setup and load things
   protected initialise() {
-    // this.entityClickManager = new EntityClickManager(this.entityManager, this.clickManager)
-    //   .addEntityMousedownListeners();
   }
 
   protected abstract drawLoadingScreen(ctx: CanvasRenderingContext2D): void;

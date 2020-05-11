@@ -1,14 +1,24 @@
 import {resId} from "../ImageSources";
 import {Tile} from "../../engine/board/Tile";
-import {Position} from "../../engine/interface/Position";
 
 export class GrassTile extends Tile {
 
   protected imageIds: number[] = [resId.Grass];
   private highlightBorder = false;
 
-  draw(ctx: CanvasRenderingContext2D): void {
-    super.draw(ctx);
+  protected init() {
+    super.init();
+
+    this.addMouseEnterBehaviour((x: number, y: number) => {
+      this.setHighlight(true);
+    });
+
+    this.addMouseLeaveBehaviour((x: number, y: number) => {
+      this.setHighlight(false);
+    })
+  }
+
+  drawOverlay(ctx: CanvasRenderingContext2D): void {
     if (this.highlightBorder) {
       this.drawOutline(ctx, 'white');
     }
@@ -31,16 +41,6 @@ export class GrassTile extends Tile {
     ctx.moveTo(this.position.x, this.position.y + this.height/2);
     ctx.lineTo(this.position.x + this.width/2, this.position.y);
     ctx.stroke();
-  }
-
-  onMouseOver(x: number, y: number): void {
-    super.onMouseOver(x, y);
-    this.setHighlight(true);
-  }
-
-  onMouseOff(x: number, y: number): void {
-    super.onMouseOff(x, y);
-    this.setHighlight(false);
   }
 
 }

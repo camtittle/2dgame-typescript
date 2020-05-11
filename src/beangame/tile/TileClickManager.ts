@@ -1,28 +1,16 @@
 import {Hamster} from "../entity/Hamster";
-import {Board} from "../../engine/board/Board";
-import {GrassTile} from "./GrassTile";
+import {IsometricBoard} from "../../engine/board/IsometricBoard";
+import {Tile} from "../../engine/board/Tile";
 
 export class TileClickManager {
 
-  private board: Board;
+  private board: IsometricBoard;
 
   constructor() {
   }
 
-  public setBoard(board: Board) {
+  public setBoard(board: IsometricBoard) {
     this.board = board;
-  }
-
-  public registerTileHoverBehaviour() {
-    if (!this.board) {
-      throw new Error('Cannot register tile hover behaviour. No board set');
-    }
-
-    // this.board.registerTileOnClickListener(tile => {
-    //   if (tile instanceof GrassTile) {
-    //     tile.setHighlight(true);
-    //   }
-    // })
   }
 
   public registerHamsterBehaviour(hamster: Hamster) {
@@ -30,8 +18,8 @@ export class TileClickManager {
       throw new Error('Cannot register hamster behaviour. No board set');
     }
 
-    this.board.registerTileOnClickListener(tile => {
-      hamster.setDestinationTile(tile);
+    this.board.addTileMouseDownBehaviour(function() {
+      hamster.setDestinationTile(this as Tile)
     })
   }
 

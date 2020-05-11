@@ -1,16 +1,43 @@
-import {Entity} from "./Entity";
+import * as uuidv1 from 'uuid/v1';
+import {Updatable} from "../interface/Updatable";
+import {IsometricEntityManager} from "./IsometricEntityManager";
+import {SpriteDrawable} from "../graphics/SpriteDrawable";
+import {IsometricBoard} from "../board/IsometricBoard";
 import {Tile} from "../board/Tile";
-import {Board} from "../board/Board";
 
-// Entity that is aligned to the board and occupies
-// one tile at a time
-export abstract class TileBoundEntity extends Entity {
+export abstract class TileBoundIsometricEntity extends SpriteDrawable implements Updatable {
 
-  private board: Board;
-  private currentTile: Tile;
-  private destinationTile: Tile;
+  protected board: IsometricBoard;
+  protected entityManager: IsometricEntityManager;
+  protected zIndex = 0;
+  protected readonly _id: string = uuidv1();
+  protected currentTile: Tile;
+  protected destinationTile: Tile;
   protected speedTilesPerSecond = 10;
   private timeSinceLastMove = 0;
+  protected depth = 2;
+
+  get id() { return this._id; }
+
+  constructor(board: IsometricBoard, entityManager: IsometricEntityManager) {
+    super();
+    this.board = board;
+    this.entityManager = entityManager;
+  }
+
+  update(progress: number): void {
+    this.moveTowardsDestinationTile(progress);
+  }
+
+  public setZIndex(z: number) {
+    this.zIndex = z;
+    this.entityManager.refreshZIndecesOnNextUpdate();
+  }
+
+  public getZIndex() {
+    return this.zIndex;
+  }
+
 
   public setDestinationTile(tile: Tile) {
     this.destinationTile = tile;
@@ -20,17 +47,13 @@ export abstract class TileBoundEntity extends Entity {
   public setTile(tile: Tile) {
     this.currentTile = tile;
     this.width = tile.width;
-    this.height = tile.height;
-    this.setPosition(tile.getPosition());
+    this.height = tile.height * this.depth;
+    const tilePosition = tile.getPosition();
+    this.setPosition({x: tilePosition.x, y: tilePosition.y - tile.height*this.depth/2});
   }
 
-  public setBoard(board: Board) {
+  public setBoard(board: IsometricBoard) {
     this.board = board;
-  }
-
-  update(progress: number): void {
-    super.update(progress);
-    this.moveTowardsDestinationTile(progress);
   }
 
   private moveTowardsDestinationTile(progress: number) {
@@ -43,8 +66,6 @@ export abstract class TileBoundEntity extends Entity {
     if (this.timeSinceLastMove < msBetweenMoves) {
       return;
     }
-
-    console.log('moving');
 
     this.timeSinceLastMove = this.timeSinceLastMove - msBetweenMoves;
 
@@ -76,5 +97,5 @@ export abstract class TileBoundEntity extends Entity {
   public getCurrentTile(): Tile {
     return this.currentTile;
   }
-
 }
+
