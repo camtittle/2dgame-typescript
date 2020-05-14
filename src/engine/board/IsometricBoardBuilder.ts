@@ -11,6 +11,8 @@ export class IsometricBoardBuilder {
   private tileHeight: number;
   private guWidth: number;
   private guHeight: number;
+  private boardPosX = 0;
+  private boardPosY = 0;
   private tileGeneratorFn: (width: number, height: number) => Tile[][];
   private imageProvider: ImageProvider;
   private drawableManager: DrawableManager;
@@ -23,7 +25,7 @@ export class IsometricBoardBuilder {
     return this;
   }
 
-  withGameDimensions(guWidth: number, guHeight: number) {
+  withBoardDimensions(guWidth: number, guHeight: number) {
     this.guWidth = guWidth;
     this.guHeight = guHeight;
     return this;
@@ -46,6 +48,12 @@ export class IsometricBoardBuilder {
 
   isIsometric() {
     this.isometric = true;
+    return this;
+  }
+
+  withPosition(x: number, y: number) {
+    this.boardPosX = x;
+    this.boardPosY = y;
     return this;
   }
 
@@ -81,6 +89,7 @@ export class IsometricBoardBuilder {
     board.setGameDimensions({ width: this.guWidth, height: this.guHeight });
     board.setTiles(this.tileGeneratorFn(this.tileWidth, this.tileHeight));
     board.setupTileImages(this.imageProvider);
+    board.setBoardPosition({x: this.boardPosX, y: this.boardPosY});
 
     if (this.clickManager) {
       this.clickManager.addMouseMoveListener((x, y) => {

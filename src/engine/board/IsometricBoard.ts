@@ -5,6 +5,7 @@ import {Position} from "../interface/Position";
 import {Intersectable} from "../interface/Intersectable";
 import {Drawable} from "../interface/Drawable";
 import {MouseBehaviour} from "../interface/MouseBehaviour";
+import {TileFootprint} from "./TileFootprint";
 
 export class IsometricBoard implements Drawable, Intersectable {
 
@@ -84,6 +85,29 @@ export class IsometricBoard implements Drawable, Intersectable {
     }
 
     return this.tiles[coords.x][coords.y];
+  }
+
+  public getTilesInFootprint(originTile: Tile | Position, footprint: TileFootprint): Tile[] {
+    if (!(originTile instanceof Tile)) {
+      originTile = this.getTile(originTile as Position);
+    }
+
+    if (originTile == null) {
+      throw new Error('Error getting tiles in footprint - origin tile out of range of board');
+    }
+
+    const tiles: Tile[] = [];
+    const origin = originTile.getCoords();
+    for (let x = origin.x; x < origin.x + footprint.width; x++) {
+      for (let y = origin.y; y < origin.y + footprint.height; y++) {
+        const tile = this.getTile({x: x, y: y});
+        if (tile) {
+          tiles.push(tile);
+        }
+      }
+    }
+
+    return tiles;
   }
 
   public addTileMouseDownBehaviour(behaviour: MouseBehaviour) {

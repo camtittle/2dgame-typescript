@@ -7,6 +7,7 @@ import {GrassTile} from "./tile/GrassTile";
 import {TileClickManager} from "./tile/TileClickManager";
 import {config} from "./config";
 import {HamsterSpawner} from "./factory/HamsterSpawner";
+import {CageSpawner} from "./factory/CageSpawner";
 
 export class BeanGame extends Game {
 
@@ -19,6 +20,7 @@ export class BeanGame extends Game {
     super.initialise();
     this.buildBoard();
     this.spawnHamsterOntoBoard();
+    this.spawnTestWall();
   }
 
   private initNetwork() {
@@ -35,8 +37,9 @@ export class BeanGame extends Game {
     };
 
     this.board = new IsometricBoardBuilder()
-      .withGameDimensions(this.canvasManager.getWidth(), this.canvasManager.getHeight())
+      .withBoardDimensions(this.canvasManager.getWidth(), this.canvasManager.getHeight())
       .withTileDimensions(config.boardWidth, config.boardHeight)
+      .withPosition(0, config.boardOffsetTop)
       .populatedWithTile(tileFactory)
       .withClickManager(this.clickManager)
       .withImageProvider(this.imageProvider)
@@ -51,6 +54,21 @@ export class BeanGame extends Game {
     const hamsterSpawner = new HamsterSpawner(this.entityManager, this.imageProvider);
     const spawnedHamster = hamsterSpawner.spawnHamster(this.board, startingTile);
     this.tileClickManager.registerHamsterBehaviour(spawnedHamster);
+  }
+
+  private spawnTestWall() {
+    const startingTile = this.board.getTile({x: 0, y: 6});
+    const cageSpawner = new CageSpawner(this.entityManager, this.imageProvider);
+    cageSpawner.spawnWheel(this.board, startingTile).setType('large');
+
+    const startingTile2 = this.board.getTile({x: 6, y: 6});
+    cageSpawner.spawnWheel(this.board, startingTile2);
+
+    const startingTile3 = this.board.getTile({x: 13, y: 4});
+    cageSpawner.spawnWheel(this.board, startingTile3).setType('large-rhs');
+
+    const tile4 = this.board.getTile({x: 10, y: 10});
+    cageSpawner.spawnFoodBowl(this.board, tile4);
   }
 
   protected drawLoadingScreen(ctx: CanvasRenderingContext2D): void {

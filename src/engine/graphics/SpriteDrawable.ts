@@ -7,7 +7,7 @@ import {MouseBehaviour} from "../interface/MouseBehaviour";
 
 export abstract class SpriteDrawable implements Drawable, Intersectable {
 
-  private showDebugOutline = false;
+  protected showDebugOutline = false;
 
   // Image stuff
   protected abstract imageIds: number[];

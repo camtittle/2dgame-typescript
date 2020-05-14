@@ -5,6 +5,7 @@ export abstract class Tile extends SpriteDrawable {
 
   id: string;
   private coords: Position;
+  private zIndex: number = 0;
 
   constructor(coords: Position) {
     super();

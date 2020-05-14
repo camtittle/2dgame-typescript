@@ -4,6 +4,7 @@ import {IsometricEntityManager} from "./IsometricEntityManager";
 import {SpriteDrawable} from "../graphics/SpriteDrawable";
 import {IsometricBoard} from "../board/IsometricBoard";
 import {Tile} from "../board/Tile";
+import {TileFootprint} from "../board/TileFootprint";
 
 export abstract class TileBoundIsometricEntity extends SpriteDrawable implements Updatable {
 
@@ -11,11 +12,21 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
   protected entityManager: IsometricEntityManager;
   protected zIndex = 0;
   protected readonly _id: string = uuidv1();
-  protected currentTile: Tile;
-  protected destinationTile: Tile;
+
+  protected currentOriginTile: Tile;
+  protected destinationOriginTile: Tile;
   protected speedTilesPerSecond = 10;
   private timeSinceLastMove = 0;
-  protected depth = 2;
+
+  protected showDebugOutline = false;
+
+  // How many tiles does this entity occupy
+  protected tileFootprint: TileFootprint = {
+    depth: 1,
+    height: 1,
+    width: 1,
+  };
+  protected currentTiles: Tile[];
 
   get id() { return this._id; }
 
@@ -23,6 +34,11 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
     super();
     this.board = board;
     this.entityManager = entityManager;
+    this.init();
+    console.log(this.tileFootprint);
+  }
+
+  protected init() {
   }
 
   update(progress: number): void {
@@ -40,16 +56,29 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
 
 
   public setDestinationTile(tile: Tile) {
-    this.destinationTile = tile;
+    this.destinationOriginTile = tile;
     this.timeSinceLastMove = 0;
   }
 
   public setTile(tile: Tile) {
-    this.currentTile = tile;
-    this.width = tile.width;
-    this.height = tile.height * this.depth;
+    this.currentOriginTile = tile;
+    this.recalcSizeAndPosition();
+  }
+
+  private recalcSizeAndPosition() {
+    const tile = this.currentOriginTile;
+    if (!this.currentOriginTile) {
+      return;
+    }
+    this.width = tile.width + ((this.tileFootprint.height-1)*tile.width/2) + ((this.tileFootprint.width-1)*tile.width/2);
+    this.height = tile.height * this.tileFootprint.depth;
     const tilePosition = tile.getPosition();
-    this.setPosition({x: tilePosition.x, y: tilePosition.y - tile.height*this.depth/2});
+
+    const yPos = tilePosition.y - ((this.tileFootprint.depth-1)*tile.height) + ((this.tileFootprint.height-1)*tile.height/2) + ((this.tileFootprint.width-1)*tile.height/2);
+    const xPos = tilePosition.x - ((this.tileFootprint.height-1)*tile.width/2);
+    this.setPosition({x: xPos, y: yPos});
+    this.currentTiles = this.board.getTilesInFootprint(this.currentOriginTile, this.tileFootprint);
+    console.log({type: this.constructor.name, tiles: this.currentTiles});
   }
 
   public setBoard(board: IsometricBoard) {
@@ -57,7 +86,7 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
   }
 
   private moveTowardsDestinationTile(progress: number) {
-    if (!this.destinationTile || this.destinationTile === this.currentTile) {
+    if (!this.destinationOriginTile || this.destinationOriginTile === this.currentOriginTile) {
       return;
     }
 
@@ -69,9 +98,9 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
 
     this.timeSinceLastMove = this.timeSinceLastMove - msBetweenMoves;
 
-    const destCoords = this.destinationTile.getCoords();
-    const currentCoords = this.currentTile.getCoords();
-    const newCoords = this.currentTile.getCoords();
+    const destCoords = this.destinationOriginTile.getCoords();
+    const currentCoords = this.currentOriginTile.getCoords();
+    const newCoords = this.currentOriginTile.getCoords();
 
     const xDiff = destCoords.x - currentCoords.x;
     if (xDiff !== 0) {
@@ -95,7 +124,18 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
   }
 
   public getCurrentTile(): Tile {
-    return this.currentTile;
+    return this.currentOriginTile;
   }
+
+  protected setTileFootprint(height: number, width: number, depth: number) {
+    this.tileFootprint = {
+      height: height,
+      depth: depth,
+      width: width
+    };
+    this.recalcSizeAndPosition();
+  }
+
+
 }
 
