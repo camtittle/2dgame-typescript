@@ -4,6 +4,9 @@ import {Position} from "../interface/Position";
 import {ImageProvider} from "../graphics/ImageProvider";
 import {ClickManager} from "../mouse/ClickManager";
 import {DrawableManager} from "../DrawableManager";
+import {IsometricBoardConfig} from "./IsometricBoardConfig";
+import {ConfigParser, EntityFactories, TileFactories} from "./ConfigParser";
+import {IsometricEntityManager} from "../entity/IsometricEntityManager";
 
 export class IsometricBoardBuilder {
 
@@ -17,7 +20,11 @@ export class IsometricBoardBuilder {
   private imageProvider: ImageProvider;
   private drawableManager: DrawableManager;
   private clickManager: ClickManager;
-  private isometric = false;
+  private entityManager: IsometricEntityManager;
+
+  private config: IsometricBoardConfig;
+  private tileFactoriesForConfig: TileFactories;
+  private entityFactories: EntityFactories;
 
   withTileDimensions(tileWidth: number, tileHeight: number) {
     this.tileWidth = tileWidth;
@@ -46,8 +53,8 @@ export class IsometricBoardBuilder {
     return this;
   }
 
-  isIsometric() {
-    this.isometric = true;
+  withEntityManager(entityManager: IsometricEntityManager) {
+    this.entityManager = entityManager;
     return this;
   }
 
@@ -71,8 +78,15 @@ export class IsometricBoardBuilder {
     return this;
   }
 
+  fromConfig(config: IsometricBoardConfig, tileFactories: TileFactories, entityFactories: EntityFactories) {
+    this.config = config;
+    this.tileFactoriesForConfig = tileFactories;
+    this.entityFactories = entityFactories;
+    return this;
+  }
+
   build(): IsometricBoard {
-    if (!this.tileHeight || !this.tileWidth || !this.guHeight || !this.guWidth || !this.tileGeneratorFn) {
+    if (!this.guHeight || !this.guWidth) {
       throw new Error("Cannot build board - missing parameters");
     }
 
@@ -84,12 +98,29 @@ export class IsometricBoardBuilder {
       console.warn("Building IsometricBoard without a DrawableManager - board may not be drawn");
     }
 
-    const board = new IsometricBoard();
-    board.setTileDimensions({ width: this.tileWidth, height: this.tileHeight});
-    board.setGameDimensions({ width: this.guWidth, height: this.guHeight });
-    board.setTiles(this.tileGeneratorFn(this.tileWidth, this.tileHeight));
-    board.setupTileImages(this.imageProvider);
-    board.setBoardPosition({x: this.boardPosX, y: this.boardPosY});
+    // Build board either from config file if provided, else use provided parameters, else error
+    let board: IsometricBoard;
+    if (this.config) {
+
+      if (!this.entityManager) throw new Error("Cannot build board from config: No EntityFactory provided");
+
+      const configParser = new ConfigParser(this.imageProvider, this.entityManager);
+      board = configParser.buildBoardFromConfig(this.config, this.tileFactoriesForConfig);
+
+      board.setBoardDimensions({ width: this.guWidth, height: this.guHeight });
+      board.setBoardPosition({x: this.boardPosX, y: this.boardPosY});
+
+      configParser.spawnEntitiesFromConfig(board, this.config, this.entityFactories);
+
+    } else if (this.tileGeneratorFn && this.tileHeight && this.tileWidth) {
+      board = new IsometricBoard();
+      board.setTiles(this.tileGeneratorFn(this.tileWidth, this.tileHeight));
+      board.setTileDimensions({ width: this.tileWidth, height: this.tileHeight});
+      board.setupTileImages(this.imageProvider);
+    } else {
+      throw new Error("ERROR: Cannot build board without either a BoardConfig or tile size/factories provided");
+    }
+
 
     if (this.clickManager) {
       this.clickManager.addMouseMoveListener((x, y) => {
@@ -111,3 +142,5 @@ export class IsometricBoardBuilder {
 }
 
 export type TileFactory = (coords: Position) => Tile;
+
+

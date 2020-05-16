@@ -10,7 +10,12 @@ export class CanvasManager {
   public constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
-    // this.ctx.imageSmoothingEnabled = true;
+    this.ctx.imageSmoothingEnabled = true;
+
+    this.setCanvasToFillScreen();
+    window.addEventListener('resize', () => {
+      this.setCanvasToFillScreen();
+    });
   }
 
   public getWidth() {
@@ -27,6 +32,11 @@ export class CanvasManager {
       width: this.canvas.width * sf,
       height: this.canvas.height * sf
     }
+  }
+
+  public setCanvasToFillScreen() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
   }
 
   public getScaledXCoord(pageX: number) {

@@ -1,7 +1,7 @@
-export type ImageSources = { [id: number]:
-    {
-      src: string;
-    }
-}
+export type ImageSourceMap<IdType extends string> = { [id in IdType]: SingleSource | ImageSourceMap<string> }
 
-export type ImagesById = { [id: number]: HTMLImageElement }
+export type SingleSource = string;
+
+export type ImageMap = { [id: string]: SingleImage | ImageMap }
+
+export type SingleImage = HTMLImageElement;

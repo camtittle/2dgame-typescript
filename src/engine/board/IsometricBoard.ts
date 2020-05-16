@@ -14,6 +14,7 @@ export class IsometricBoard implements Drawable, Intersectable {
   private eachTileDimensions: Dimensions;
   private boardDimensions: Dimensions;
   private boardPosition: Position = {x: 0, y: 0};
+  private zoomLevel = 1.5;
 
   private currentMouseOverTile: Tile;
 
@@ -27,7 +28,7 @@ export class IsometricBoard implements Drawable, Intersectable {
     this.updateTileSizeAndPositions();
   }
 
-  public setGameDimensions(dimensions: Dimensions) {
+  public setBoardDimensions(dimensions: Dimensions) {
     this.boardDimensions = dimensions;
     this.updateTileSizeAndPositions();
   }
@@ -41,7 +42,7 @@ export class IsometricBoard implements Drawable, Intersectable {
   private updateTileSizeAndPositions() {
     if (this.boardDimensions && this.tileDimensions && this.boardPosition && this.tiles) {
 
-      const tileWidth = this.boardDimensions.width / this.tileDimensions.width;
+      const tileWidth = this.boardDimensions.width / this.tileDimensions.width * this.zoomLevel;
       const tileHeight = tileWidth / 2;
       this.eachTileDimensions = {width: tileWidth, height: tileHeight};
 
@@ -67,7 +68,7 @@ export class IsometricBoard implements Drawable, Intersectable {
 
   public setupTileImages(imageProvider: ImageProvider) {
     this.forEachTile(tile => {
-      tile.setupImages(imageProvider);
+      tile.setupResources(imageProvider);
     })
   }
 

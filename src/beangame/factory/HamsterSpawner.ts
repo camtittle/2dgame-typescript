@@ -11,8 +11,8 @@ export class HamsterSpawner {
 
   public spawnHamster(board: IsometricBoard, startingTile: Tile): Hamster {
     const hamster = new Hamster(board, this.entityManager);
-    hamster.setTile(startingTile);
-    hamster.setupImages(this.imageProvider);
+    hamster.setOriginTile(startingTile);
+    hamster.setupResources(this.imageProvider);
     this.entityManager.register(hamster);
     return hamster;
   }

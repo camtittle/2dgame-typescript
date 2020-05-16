@@ -1,4 +1,4 @@
-import {ImageSources} from "./graphics/ImageResource";
+import {ImageSourceMap} from "./graphics/ImageResource";
 import {ImageLoader} from "./graphics/ImageLoader";
 import {ClickManager} from "./mouse/ClickManager";
 import {IsometricEntityManager} from "./entity/IsometricEntityManager";
@@ -11,7 +11,7 @@ export default abstract class Game {
 
   private lastRender = performance.now();
 
-  protected abstract resources: ImageSources;
+  protected abstract resources: ImageSourceMap<any>;
   protected entityManager: IsometricEntityManager;
   protected drawableManager: DrawableManager;
   protected canvasManager: CanvasManager;

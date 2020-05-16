@@ -5,6 +5,7 @@ import {SpriteDrawable} from "../graphics/SpriteDrawable";
 import {IsometricBoard} from "../board/IsometricBoard";
 import {Tile} from "../board/Tile";
 import {TileFootprint} from "../board/TileFootprint";
+import {Orientation, OrientationUtils} from "./Orientation";
 
 export abstract class TileBoundIsometricEntity extends SpriteDrawable implements Updatable {
 
@@ -17,10 +18,11 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
   protected destinationOriginTile: Tile;
   protected speedTilesPerSecond = 10;
   private timeSinceLastMove = 0;
+  private orientation = Orientation.NORTH;
 
   protected showDebugOutline = false;
 
-  // How many tiles does this entity occupy
+  // How many tiles does this entity occupy **in the NORTH orientation**
   protected tileFootprint: TileFootprint = {
     depth: 1,
     height: 1,
@@ -35,7 +37,6 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
     this.board = board;
     this.entityManager = entityManager;
     this.init();
-    console.log(this.tileFootprint);
   }
 
   protected init() {
@@ -60,16 +61,17 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
     this.timeSinceLastMove = 0;
   }
 
-  public setTile(tile: Tile) {
+  public setOriginTile(tile: Tile) {
     this.currentOriginTile = tile;
     this.recalcSizeAndPosition();
   }
 
   private recalcSizeAndPosition() {
     const tile = this.currentOriginTile;
-    if (!this.currentOriginTile) {
+    if (!tile || !this.tileFootprint || !this.board) {
       return;
     }
+
     this.width = tile.width + ((this.tileFootprint.height-1)*tile.width/2) + ((this.tileFootprint.width-1)*tile.width/2);
     this.height = tile.height * this.tileFootprint.depth;
     const tilePosition = tile.getPosition();
@@ -78,11 +80,11 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
     const xPos = tilePosition.x - ((this.tileFootprint.height-1)*tile.width/2);
     this.setPosition({x: xPos, y: yPos});
     this.currentTiles = this.board.getTilesInFootprint(this.currentOriginTile, this.tileFootprint);
-    console.log({type: this.constructor.name, tiles: this.currentTiles});
   }
 
   public setBoard(board: IsometricBoard) {
     this.board = board;
+    this.recalcSizeAndPosition();
   }
 
   private moveTowardsDestinationTile(progress: number) {
@@ -120,20 +122,28 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
       }
     }
 
-    this.setTile(this.board.getTile(newCoords));
+    this.setOriginTile(this.board.getTile(newCoords));
   }
 
   public getCurrentTile(): Tile {
     return this.currentOriginTile;
   }
 
-  protected setTileFootprint(height: number, width: number, depth: number) {
+  public setTileFootprint(height: number, width: number, depth: number) {
     this.tileFootprint = {
       height: height,
       depth: depth,
       width: width
     };
     this.recalcSizeAndPosition();
+  }
+
+  public setOrientation(orientation: Orientation) {
+    // swap height and width
+    if (!OrientationUtils.isOppositeOrientation(this.orientation, orientation)) {
+      this.setTileFootprint(this.tileFootprint.width, this.tileFootprint.height, this.tileFootprint.depth);
+    }
+    this.orientation = orientation;
   }
 
 

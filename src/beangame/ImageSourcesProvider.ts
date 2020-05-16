@@ -1,9 +1,9 @@
-import {ImageSources} from "../engine/graphics/ImageResource";
-import {imageSources} from "./ImageSources";
+import {ImageSourceMap} from "../engine/graphics/ImageResource";
+import {imageSources, resourceId} from "./ImageSources";
 
 export class ImageSourcesProvider {
 
-  public getImageSources(): ImageSources {
+  public getImageSources(): ImageSourceMap<resourceId> {
     return imageSources;
   }
 

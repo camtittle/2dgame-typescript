@@ -1,9 +1,9 @@
-import {resId} from "../ImageSources";
+import {resourceId} from "../ImageSources";
 import {TileBoundIsometricEntity} from "../../engine/entity/TileBoundIsometricEntity";
 
 export class Hamster extends TileBoundIsometricEntity {
 
-  imageIds = [resId.Hamster];
+  resourceIds = [resourceId.Hamster];
 
   protected init() {
     super.init();
