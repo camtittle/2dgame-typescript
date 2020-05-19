@@ -11,19 +11,14 @@ export class ImageProvider {
     this.images = images;
   }
 
-  public getImagesByResourceId(ids: string[]): ImageMap {
+  public getImagesByResourceId(id: string): ImageMap | HTMLImageElement {
     if (!this.images) {
       throw new Error("Cannot get resources: No resources set");
     }
 
-    const resources: ImageMap = {};
-    for (let id in this.images) {
-      if (ids.includes(id)) {
-        resources[id] = this.images[id];
-      }
-    }
-    if (Object.keys(resources).length < ids.length) {
-      console.warn("ImageProvider: Resource IDs requested do not correspond to any loaded resources.", ids);
+    const resources = this.images[id];
+    if (!resources) {
+      console.warn("ImageProvider: Resource ID requested do not correspond to any loaded resources.", id);
     }
     return resources;
   }

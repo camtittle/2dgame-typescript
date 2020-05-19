@@ -8,15 +8,7 @@ export interface IsometricBoardConfig {
     }
   },
   plainEntities?: {
-    [id: string]: {
-      footprint: {
-        width: number;
-        height: number;
-        depth: number;
-      },
-      resourceId: string,
-      originTileCoordinates: OriginTileCoordinates[]
-    }
+    [id: string]: PlainEntityConfig
   },
   richEntities?: {
     [id: string]: {
@@ -27,8 +19,25 @@ export interface IsometricBoardConfig {
   tiles: string[][]
 }
 
+export interface PlainEntityConfig {
+  footprint: {
+    width: number;
+    height: number;
+    depth: number;
+  },
+  resourceId: string,
+  originTileCoordinates: OriginTileCoordinates[]
+}
+
 export type OriginTileCoordinates = {
   x: number,
   y: number,
-  orientation: string
+  orientation?: OrientationConfig
+}
+
+export enum OrientationConfig {
+  NORTH = 'n',
+  EAST = 'e',
+  SOUTH = 's',
+  WEST = 'w'
 }

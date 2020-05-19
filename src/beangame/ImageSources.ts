@@ -1,5 +1,6 @@
 import {ImageSourceMap} from "../engine/graphics/ImageResource";
 import {Orientation} from "../engine/entity/Orientation";
+import Hamster from './img/hamster'
 
 export enum resourceId {
   Grass = 'grass',
@@ -21,11 +22,11 @@ export const imageSources: ImageSourceMap<resourceId> = {
   [resourceId.PinkTile]: 'res/pinktile.png',
   [resourceId.CageWall]: <ImageSourceMap<Orientation>> {
     [Orientation.NORTH]: 'res/cage-wall-left.png',
-    [Orientation.EAST]: 'res/cage-wall-east.png',
+    [Orientation.WEST]: 'res/cage-wall-east.png',
   },
   [resourceId.Wheel]: 'res/wheel.png',
   [resourceId.WheelLarge]: 'res/wheel-large.png',
   [resourceId.WheelLargeRhs]: 'res/wheel-large-rhs.png',
-  [resourceId.Hamster]: 'res/hamster-iso.png',
+  [resourceId.Hamster]: Hamster,
   [resourceId.FoodBowl]: 'res/food-bowl.png'
 };

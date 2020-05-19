@@ -1,10 +1,16 @@
-import {IsometricBoardConfig} from "./IsometricBoardConfig";
+import {
+  IsometricBoardConfig,
+  OrientationConfig,
+  OriginTileCoordinates,
+  PlainEntityConfig
+} from "./IsometricBoardConfig";
 import {IsometricBoard} from "./IsometricBoard";
 import {TileFactory} from "./IsometricBoardBuilder";
 import {ImageProvider} from "../graphics/ImageProvider";
 import {Tile} from "./Tile";
 import {IsometricEntityManager} from "../entity/IsometricEntityManager";
 import {TileBoundIsometricEntity} from "../entity/TileBoundIsometricEntity";
+import {Orientation, OrientationSupport} from "../entity/Orientation";
 
 export class ConfigParser {
 
@@ -43,9 +49,9 @@ export class ConfigParser {
       const tile = thisTileFactory(coords);
       if (!tile) throw new Error("Error: Tile factory " + tileType.factoryName + " returned null");
 
-      const tileResources = this.imageProvider.getImagesByResourceId([tileType.resourceId]);
+      const tileResources = this.imageProvider.getImagesByResourceId(tileType.resourceId);
       if (!tileResources) throw new Error("Cannot set resources for tile type " + tileTypeName + ". Does the resourceId correspond to a resource in the ImageProvider?");
-      tile.setResources(tileResources);
+      tile.setResources(tileType.resourceId, tileResources);
 
       return tile;
     };
@@ -75,18 +81,42 @@ export class ConfigParser {
         // for each set of coordinates provided, spawn an instance of the entity at those coords
         for (let coordinates of entityConfig.originTileCoordinates) {
           const entity = factories.plainEntity();
-          const fp = entityConfig.footprint;
-          entity.setTileFootprint(fp.height, fp.width, fp.depth);
-          entity.setResources(this.imageProvider.getImagesByResourceId([entityConfig.resourceId]));
-          entity.setOriginTile(board.getTile(coordinates));
-          entity.setBoard(board);
-          this.entityManager.register(entity);
+          this.spawnPlainEntity(board, entity, entityConfig, coordinates);
         }
       });
     }
   }
 
+  private spawnPlainEntity(board: IsometricBoard, entity: TileBoundIsometricEntity, config: PlainEntityConfig, coordinates: OriginTileCoordinates) {
+    entity.setBoard(board);
+
+    const fp = config.footprint;
+    entity.setTileFootprint(fp.height, fp.width, fp.depth);
+    entity.setOriginTile(board.getTile(coordinates));
+
+    const resources = this.imageProvider.getImagesByResourceId(config.resourceId);
+    entity.setResources(config.resourceId, resources);
+
+    if (coordinates.orientation) {
+      const orientation = orientationConfigMap[coordinates.orientation];
+      entity.setOrientationSupport(OrientationSupport.FourWay);
+      entity.setOrientation(orientation);
+    }
+
+    this.entityManager.register(entity);
+  }
+
+
+
 }
+
+const orientationConfigMap = {
+  [OrientationConfig.NORTH]: Orientation.NORTH,
+  [OrientationConfig.EAST]: Orientation.EAST,
+  [OrientationConfig.SOUTH]: Orientation.SOUTH,
+  [OrientationConfig.WEST]: Orientation.WEST,
+};
+
 
 export type TileFactories = {
   [factoryName: string]: TileFactory

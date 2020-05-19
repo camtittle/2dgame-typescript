@@ -1,6 +1,6 @@
-import {EntityFactories, TileFactories} from "../../engine/board/ConfigParser";
+import {TileFactories} from "../../engine/board/ConfigParser";
 import {PlainTile} from "./PlainTile";
-import {IsometricBoardConfig} from "../../engine/board/IsometricBoardConfig";
+import {IsometricBoardConfig, OrientationConfig} from "../../engine/board/IsometricBoardConfig";
 
 export const cageBoardConfig: IsometricBoardConfig = {
   width: 16,
@@ -30,8 +30,7 @@ export const cageBoardConfig: IsometricBoardConfig = {
       originTileCoordinates: [
         {
           x: 1,
-          y: 1,
-          orientation: 'nw'
+          y: 1
         }
       ]
     },
@@ -43,14 +42,22 @@ export const cageBoardConfig: IsometricBoardConfig = {
       },
       resourceId: 'cageWall',
       originTileCoordinates: [
-        { x: 0, y: 0, orientation: 'nw' },
-        { x: 0, y: 2, orientation: 'nw' },
-        { x: 0, y: 4, orientation: 'nw' },
-        { x: 0, y: 6, orientation: 'nw' },
-        { x: 0, y: 8, orientation: 'nw' },
-        { x: 0, y: 10, orientation: 'nw' },
-        { x: 0, y: 12, orientation: 'nw' },
-        { x: 0, y: 14, orientation: 'nw' },
+        { x: 0, y: 0, orientation:  OrientationConfig.NORTH },
+        { x: 0, y: 2, orientation:  OrientationConfig.NORTH },
+        { x: 0, y: 4, orientation:  OrientationConfig.NORTH },
+        { x: 0, y: 6, orientation:  OrientationConfig.NORTH },
+        { x: 0, y: 8, orientation:  OrientationConfig.NORTH },
+        { x: 0, y: 10, orientation: OrientationConfig.NORTH },
+        { x: 0, y: 12, orientation: OrientationConfig.NORTH },
+        { x: 0, y: 14, orientation: OrientationConfig.NORTH },
+        { x: 0, y: 0, orientation:  OrientationConfig.WEST },
+        { x: 2, y: 0, orientation:  OrientationConfig.WEST },
+        { x: 4, y: 0, orientation:  OrientationConfig.WEST },
+        { x: 6, y: 0, orientation:  OrientationConfig.WEST },
+        { x: 8, y: 0, orientation:  OrientationConfig.WEST },
+        { x: 10, y: 0, orientation:  OrientationConfig.WEST },
+        { x: 12, y: 0, orientation:  OrientationConfig.WEST },
+        { x: 14, y: 0, orientation:  OrientationConfig.WEST },
       ]
     },
   },
@@ -60,8 +67,7 @@ export const cageBoardConfig: IsometricBoardConfig = {
       originTileCoordinates: [
         {
           x: 0,
-          y: 4,
-          orientation: 'nw'
+          y: 4
         }
       ]
     }

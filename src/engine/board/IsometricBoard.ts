@@ -134,7 +134,9 @@ export class IsometricBoard implements Drawable, Intersectable {
 
   public onMouseDown(x: number, y: number) {
     const tile = this.getTileAtPosition(x, y);
-    tile.triggerMouseDown(x, y);
+    if (tile) {
+      tile.triggerMouseDown(x, y);
+    }
   }
 
   private getTileAtPosition(x: number, y: number): Tile {

@@ -5,7 +5,8 @@ import {SpriteDrawable} from "../graphics/SpriteDrawable";
 import {IsometricBoard} from "../board/IsometricBoard";
 import {Tile} from "../board/Tile";
 import {TileFootprint} from "../board/TileFootprint";
-import {Orientation, OrientationUtils} from "./Orientation";
+import {Orientation, OrientationSupport, OrientationUtils} from "./Orientation";
+import {Position} from "../interface/Position";
 
 export abstract class TileBoundIsometricEntity extends SpriteDrawable implements Updatable {
 
@@ -18,7 +19,9 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
   protected destinationOriginTile: Tile;
   protected speedTilesPerSecond = 10;
   private timeSinceLastMove = 0;
-  private orientation = Orientation.NORTH;
+
+  protected orientationSupport = OrientationSupport.None;
+  private orientation: Orientation = null;
 
   protected showDebugOutline = false;
 
@@ -123,6 +126,10 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
     }
 
     this.setOriginTile(this.board.getTile(newCoords));
+
+    if (this.orientationSupport !== OrientationSupport.None) {
+      this.orientateTowardsDestination(currentCoords, newCoords);
+    }
   }
 
   public getCurrentTile(): Tile {
@@ -138,12 +145,41 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
     this.recalcSizeAndPosition();
   }
 
+  private orientateTowardsDestination(oldCoords: Position, newCoords: Position) {
+    if (this.orientationSupport === OrientationSupport.None) {
+      throw new Error("Cannot orientate entity with OrientationSupport=NONE");
+    }
+
+    let newOrientation = OrientationUtils.calculateDirection(oldCoords, newCoords, this.orientationSupport);
+    if (newOrientation) {
+      this.setOrientation(newOrientation);
+    }
+  }
+
   public setOrientation(orientation: Orientation) {
+    if (this.orientationSupport === OrientationSupport.None) {
+      throw new Error('Error: Cannot set orientation on entity with OrientationSupport=NONE');
+    }
+
     // swap height and width
     if (!OrientationUtils.isOppositeOrientation(this.orientation, orientation)) {
       this.setTileFootprint(this.tileFootprint.width, this.tileFootprint.height, this.tileFootprint.depth);
     }
+
     this.orientation = orientation;
+    try {
+      this.currentImage = this.getImageResource(orientation);
+    } catch (e) {
+      console.error(e);
+      console.warn('Image resource for orientation ' + orientation + ' not found');
+    }
+  }
+
+  public setOrientationSupport(orientationSupport: OrientationSupport) {
+    this.orientationSupport = orientationSupport;
+
+    // Default orientation to north
+    this.orientation = Orientation.NORTH;
   }
 
 

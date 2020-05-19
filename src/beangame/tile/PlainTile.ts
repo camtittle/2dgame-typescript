@@ -3,7 +3,7 @@ import {Tile} from "../../engine/board/Tile";
 
 export class PlainTile extends Tile {
 
-  protected resourceIds = [resourceId.Grass];
+  protected resourceId = resourceId.Grass;
   private highlightBorder = false;
 
   protected init() {

@@ -10,6 +10,7 @@ import {HamsterSpawner} from "./factory/HamsterSpawner";
 import {cageBoardConfig, cageTileFactories} from "./tile/CageBoard";
 import {EntityFactories} from "../engine/board/ConfigParser";
 import {PlainEntity} from "./entity/PlainEntity";
+import {Orientation} from "../engine/entity/Orientation";
 
 export class BeanGame extends Game {
 
@@ -54,6 +55,7 @@ export class BeanGame extends Game {
     const startingTile = this.board.getTile({x: 0, y: 0});
     const hamsterSpawner = new HamsterSpawner(this.entityManager, this.imageProvider);
     const spawnedHamster = hamsterSpawner.spawnHamster(this.board, startingTile);
+    spawnedHamster.setOrientation(Orientation.WEST);
     this.tileClickManager.registerHamsterBehaviour(spawnedHamster);
   }
 

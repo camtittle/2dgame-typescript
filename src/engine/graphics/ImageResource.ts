@@ -2,6 +2,8 @@ export type ImageSourceMap<IdType extends string> = { [id in IdType]: SingleSour
 
 export type SingleSource = string;
 
+export type Resources = ImageMap | SingleImage;
+
 export type ImageMap = { [id: string]: SingleImage | ImageMap }
 
 export type SingleImage = HTMLImageElement;

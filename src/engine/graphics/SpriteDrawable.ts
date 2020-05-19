@@ -1,5 +1,5 @@
 import {Drawable} from "../interface/Drawable";
-import {ImageMap} from "./ImageResource";
+import {ImageMap, Resources, SingleImage} from "./ImageResource";
 import {Position} from "../interface/Position";
 import {ImageProvider} from "./ImageProvider";
 import {Intersectable} from "../interface/Intersectable";
@@ -10,9 +10,9 @@ export abstract class SpriteDrawable implements Drawable, Intersectable {
   protected showDebugOutline = false;
 
   // Image stuff
-  protected abstract resourceIds: string[];
-  protected resources: ImageMap;
-  protected currentImage: HTMLImageElement;
+  protected resourceId: string;
+  protected resources: Resources;
+  protected currentImage: SingleImage;
 
   // Canvas coordinates
   public width: number;
@@ -39,19 +39,19 @@ export abstract class SpriteDrawable implements Drawable, Intersectable {
 
   // Uses ImageProvider to get defined internal image resources
   public setupResources(imageProvider: ImageProvider) {
-    this.resources = imageProvider.getImagesByResourceId(this.resourceIds);
+    this.resources = imageProvider.getImagesByResourceId(this.resourceId);
     this.setCurrentImageToDefault();
   }
 
   // Directly sets the image resources, bypassing defined internal resources
-  public setResources(images: ImageMap) {
-    this.resources = images;
-    this.resourceIds = Object.keys(images);
+  public setResources(id: string, resources: Resources) {
+    this.resources = resources;
+    this.resourceId = id;
     this.setCurrentImageToDefault();
   }
 
   private setCurrentImageToDefault() {
-    let resource = this.resources[this.resourceIds[0]];
+    let resource = this.resources;
     while (!this.isImage(resource)) {
       resource = resource[Object.keys(resource)[0]];
     }
@@ -94,15 +94,19 @@ export abstract class SpriteDrawable implements Drawable, Intersectable {
   }
 
   protected getImageResource(resourceId: string): HTMLImageElement {
-    const image = this.resources[resourceId];
-    if ('src' in image) {
-      return image as HTMLImageElement;
+    if (this.isImage(this.resources)) {
+      throw new Error(`Error: Attempt to get image with Resource ID ${resourceId} from resource map, found single image resource instead: ${this.resourceId}`);
     } else {
-      throw new Error(`Error: Attempt to get image with Resource ID ${resourceId}, found collection of resources`);
+      const image = this.resources[resourceId];
+      if (image && this.isImage(image)) {
+        return image;
+      } else {
+        throw new Error("Error: Cannot find an image with resource ID " + resourceId);
+      }
     }
   }
 
-  protected isImage(resource: ImageMap | HTMLImageElement): resource is HTMLImageElement{
+  protected isImage(resource: ImageMap | HTMLImageElement): resource is HTMLImageElement {
     return 'src' in resource;
   }
 
