@@ -20,7 +20,7 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
   protected speedTilesPerSecond = 10;
   private timeSinceLastMove = 0;
 
-  protected orientationSupport = OrientationSupport.None;
+  private _orientationSupport = OrientationSupport.None;
   private orientation: Orientation = null;
 
   protected showDebugOutline = false;
@@ -127,7 +127,7 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
 
     this.setOriginTile(this.board.getTile(newCoords));
 
-    if (this.orientationSupport !== OrientationSupport.None) {
+    if (this._orientationSupport !== OrientationSupport.None) {
       this.orientateTowardsDestination(currentCoords, newCoords);
     }
   }
@@ -146,18 +146,18 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
   }
 
   private orientateTowardsDestination(oldCoords: Position, newCoords: Position) {
-    if (this.orientationSupport === OrientationSupport.None) {
+    if (this._orientationSupport === OrientationSupport.None) {
       throw new Error("Cannot orientate entity with OrientationSupport=NONE");
     }
 
-    let newOrientation = OrientationUtils.calculateDirection(oldCoords, newCoords, this.orientationSupport);
+    let newOrientation = OrientationUtils.calculateDirection(oldCoords, newCoords, this._orientationSupport);
     if (newOrientation) {
       this.setOrientation(newOrientation);
     }
   }
 
   public setOrientation(orientation: Orientation) {
-    if (this.orientationSupport === OrientationSupport.None) {
+    if (this._orientationSupport === OrientationSupport.None) {
       throw new Error('Error: Cannot set orientation on entity with OrientationSupport=NONE');
     }
 
@@ -175,11 +175,19 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
     }
   }
 
-  public setOrientationSupport(orientationSupport: OrientationSupport) {
-    this.orientationSupport = orientationSupport;
+  public get orientationSupport(): OrientationSupport {
+    return this._orientationSupport;
+  }
 
-    // Default orientation to north
-    this.orientation = Orientation.NORTH;
+  public setOrientationSupport(orientationSupport: OrientationSupport) {
+    this._orientationSupport = orientationSupport;
+
+    if (orientationSupport === OrientationSupport.None) {
+      this.orientation = null;
+    } else {
+      // Default orientation to north
+      this.orientation = Orientation.NORTH;
+    }
   }
 
 
