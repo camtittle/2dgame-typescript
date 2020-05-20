@@ -1,6 +1,7 @@
 import {ImageSourceMap} from "../engine/graphics/ImageResource";
 import {Orientation} from "../engine/entity/Orientation";
 import Hamster from './img/hamster'
+import Ramp from './img/ramp.png'
 
 export enum resourceId {
   Grass = 'grass',
@@ -12,7 +13,8 @@ export enum resourceId {
   WheelLargeRhs = 'wheelLargeRhs',
   WheelLarge = 'wheelLarge',
   Hamster = 'hamster',
-  FoodBowl = 'foodBowl'
+  FoodBowl = 'foodBowl',
+  Ramp = 'ramp'
 }
 
 export const imageSources: ImageSourceMap<resourceId> = {
@@ -28,5 +30,6 @@ export const imageSources: ImageSourceMap<resourceId> = {
   [resourceId.WheelLarge]: 'res/wheel-large.png',
   [resourceId.WheelLargeRhs]: 'res/wheel-large-rhs.png',
   [resourceId.Hamster]: Hamster,
-  [resourceId.FoodBowl]: 'res/food-bowl.png'
+  [resourceId.FoodBowl]: 'res/food-bowl.png',
+  [resourceId.Ramp]: Ramp
 };

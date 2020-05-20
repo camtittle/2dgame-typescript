@@ -26,7 +26,6 @@ export class PlainTile extends Tile {
 
   setHighlight(highlight: boolean) {
     this.highlightBorder = highlight;
-    this.setZIndex(highlight ? 1 : 0);
   }
 
   private drawOutline(ctx: CanvasRenderingContext2D, strokeStyle: string) {

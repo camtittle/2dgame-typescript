@@ -6,6 +6,7 @@ export abstract class Tile extends SpriteDrawable {
   id: string;
   private coords: Position;
   private zIndex: number = 0;
+  private elevation = 0; // in units of tileHeight
 
   constructor(coords: Position) {
     super();
@@ -29,7 +30,15 @@ export abstract class Tile extends SpriteDrawable {
     this.height = height === undefined ? width : height;
   }
 
-  public setZIndex(zIndex: number) {
+  public setElevation(elevation: number) {
+    const elevationDiff = (this.elevation - elevation) * this.height / 2;
+    this.elevation = elevation;
+    const oldPos = this.getPosition();
+    this.setPosition({x: oldPos.x, y: oldPos.y + elevationDiff});
+  }
+
+  private refreshElevation() {
+
   }
 
 }

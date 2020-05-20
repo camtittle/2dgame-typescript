@@ -2,7 +2,7 @@ import {Position} from "../interface/Position";
 
 export enum Orientation {
   NORTH = 'north',
-  NORTHEAST = 'north-west',
+  NORTHEAST = 'north-east',
   EAST = 'east',
   SOUTHEAST = 'south-east',
   SOUTH = 'south',

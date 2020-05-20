@@ -12,7 +12,7 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
 
   protected board: IsometricBoard;
   protected entityManager: IsometricEntityManager;
-  protected zIndex = 0;
+  private zIndex = 0;
   protected readonly _id: string = uuidv1();
 
   protected currentOriginTile: Tile;
@@ -83,6 +83,14 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
     const xPos = tilePosition.x - ((this.tileFootprint.height-1)*tile.width/2);
     this.setPosition({x: xPos, y: yPos});
     this.currentTiles = this.board.getTilesInFootprint(this.currentOriginTile, this.tileFootprint);
+
+    this.recalcZIndex();
+  }
+
+  private recalcZIndex() {
+    const tileCoordinates = this.currentOriginTile.getCoords();
+    const zIndex = tileCoordinates.x + tileCoordinates.y;
+    this.setZIndex(zIndex);
   }
 
   public setBoard(board: IsometricBoard) {
