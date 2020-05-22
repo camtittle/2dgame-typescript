@@ -110,11 +110,6 @@ export class IsometricBoardBuilder {
       board.setBoardDimensions({ width: this.guWidth, height: this.guHeight });
       board.setBoardPosition({x: this.boardPosX, y: this.boardPosY});
 
-      board.getTile({x: 0, y: 0}).setElevation(1);
-      board.getTile({x: 1, y: 0}).setElevation(1);
-      board.getTile({x: 1, y: 1}).setElevation(1);
-      board.getTile({x: 0, y: 1}).setElevation(1);
-
       configParser.spawnEntitiesFromConfig(board, this.config, this.entityFactories);
 
     } else if (this.tileGeneratorFn && this.tileHeight && this.tileWidth) {
@@ -135,10 +130,6 @@ export class IsometricBoardBuilder {
       this.clickManager.addMouseDownListener((x, y) => {
         board.onMouseDown(x, y);
       });
-    }
-
-    if (this.drawableManager) {
-      this.drawableManager.registerDrawable(board);
     }
 
     return board;

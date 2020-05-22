@@ -1,18 +1,16 @@
 import * as uuidv1 from 'uuid/v1';
 import {Updatable} from "../interface/Updatable";
-import {IsometricEntityManager} from "./IsometricEntityManager";
 import {SpriteDrawable} from "../graphics/SpriteDrawable";
 import {IsometricBoard} from "../board/IsometricBoard";
 import {Tile} from "../board/Tile";
 import {TileFootprint} from "../board/TileFootprint";
 import {Orientation, OrientationSupport, OrientationUtils} from "./Orientation";
 import {Position} from "../interface/Position";
+import {DrawableManager} from "../DrawableManager";
 
 export abstract class TileBoundIsometricEntity extends SpriteDrawable implements Updatable {
 
   protected board: IsometricBoard;
-  protected entityManager: IsometricEntityManager;
-  private zIndex = 0;
   protected readonly _id: string = uuidv1();
 
   protected currentOriginTile: Tile;
@@ -22,6 +20,8 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
 
   private _orientationSupport = OrientationSupport.None;
   private orientation: Orientation = null;
+
+  private subTileZIndex = 0;
 
   protected showDebugOutline = false;
 
@@ -35,10 +35,9 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
 
   get id() { return this._id; }
 
-  constructor(board: IsometricBoard, entityManager: IsometricEntityManager) {
-    super();
+  constructor(board: IsometricBoard, drawableManager: DrawableManager) {
+    super(drawableManager);
     this.board = board;
-    this.entityManager = entityManager;
     this.init();
   }
 
@@ -49,15 +48,21 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
     this.moveTowardsDestinationTile(progress);
   }
 
+  // set's the sub-tile z-index
   public setZIndex(z: number) {
-    this.zIndex = z;
-    this.entityManager.refreshZIndecesOnNextUpdate();
+    if (z < 0 || z > 1) {
+      throw new Error("Error: Sub-tile Z-Index must be between 0 and 1");
+    }
+
+    this.subTileZIndex = z;
+    this.zIndex = z + this.position.x + this.position.y;
   }
 
-  public getZIndex() {
-    return this.zIndex;
+  private recalcZIndex() {
+    const tileZIndex = this.currentOriginTile.getZIndex();
+    this.zIndex = this.subTileZIndex + tileZIndex;
+    this.drawableManager.refreshZIndexesOnNextUpdate();
   }
-
 
   public setDestinationTile(tile: Tile) {
     this.destinationOriginTile = tile;
@@ -85,12 +90,6 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
     this.currentTiles = this.board.getTilesInFootprint(this.currentOriginTile, this.tileFootprint);
 
     this.recalcZIndex();
-  }
-
-  private recalcZIndex() {
-    const tileCoordinates = this.currentOriginTile.getCoords();
-    const zIndex = tileCoordinates.x + tileCoordinates.y;
-    this.setZIndex(zIndex);
   }
 
   public setBoard(board: IsometricBoard) {

@@ -8,7 +8,7 @@ export class Hamster extends TileBoundIsometricEntity {
 
   protected init() {
     super.init();
-    this.setZIndex(3);
+    this.setZIndex(0.3);
     this.setTileFootprint(1, 1, 1);
     this.setOrientationSupport(OrientationSupport.EightWay);
   }

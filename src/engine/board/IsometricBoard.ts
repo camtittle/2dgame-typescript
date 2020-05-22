@@ -3,11 +3,10 @@ import {Dimensions} from "../interface/Dimensions";
 import {ImageProvider} from "../graphics/ImageProvider";
 import {Position} from "../interface/Position";
 import {Intersectable} from "../interface/Intersectable";
-import {Drawable} from "../interface/Drawable";
 import {MouseBehaviour} from "../interface/MouseBehaviour";
 import {TileFootprint} from "./TileFootprint";
 
-export class IsometricBoard implements Drawable, Intersectable {
+export class IsometricBoard implements Intersectable {
 
   private tiles: Tile[][];
   private tileDimensions: Dimensions;
@@ -15,6 +14,9 @@ export class IsometricBoard implements Drawable, Intersectable {
   private boardDimensions: Dimensions;
   private boardPosition: Position = {x: 0, y: 0};
   private zoomLevel = 1.5;
+
+  // Keeps track of the set of different elevations that tiles have in the board
+  private tileElevations = [0];
 
   private currentMouseOverTile: Tile;
 
@@ -140,24 +142,38 @@ export class IsometricBoard implements Drawable, Intersectable {
   }
 
   private getTileAtPosition(x: number, y: number): Tile {
-    if (!this.intersects(x, y)) {
-      return null;
-    }
 
+    const originalY = y;
     const tileWidthHalf = this.eachTileDimensions.width / 2;
     const tileHeightHalf = this.eachTileDimensions.height / 2;
-    // const tileX = (x / tileWidthHalf + y / tileHeightHalf) / 2;
     x -= tileWidthHalf;
-    const xComponent = ((x - this.boardDimensions.width/2 - this.boardPosition.x) / tileWidthHalf);
-    const yComponent = ((y - this.boardPosition.y) / tileHeightHalf);
-    const tileY = (yComponent - xComponent - 1) / 2;
-    const tileX = (xComponent + yComponent + 1) / 2;
 
-    if (tileX < 0 || tileY < 0) {
-      return null;
+    for (let elevation of this.tileElevations) {
+
+      const elevationYDiff = elevation * this.eachTileDimensions.height / 2;
+      y = originalY + elevationYDiff;
+
+      const xComponent = ((x - this.boardDimensions.width/2 - this.boardPosition.x) / tileWidthHalf);
+      const yComponent = ((y - this.boardPosition.y) / tileHeightHalf);
+      const tileY = (yComponent - xComponent - 1) / 2;
+      const tileX = (xComponent + yComponent + 1) / 2;
+
+      if (tileX < 0 || tileY < 0) {
+        return null;
+      }
+
+      const tile =  this.getTile({x: Math.trunc(tileX), y: Math.trunc(tileY)});
+      if (tile.getElevation() === elevation) return tile;
     }
+  }
 
-    return this.getTile({x: Math.trunc(tileX), y: Math.trunc(tileY)});
+  public setTileElevation(tile: Tile, elevation: number) {
+    tile.setElevation(elevation);
+    if (!this.tileElevations.includes(elevation)) {
+      this.tileElevations.push(elevation);
+      this.tileElevations.sort((a, b) => b - a);
+      console.log(this.tileElevations);
+    }
   }
 
   intersects(x: number, y: number): boolean {

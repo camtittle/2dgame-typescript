@@ -5,23 +5,11 @@ export class IsometricEntityManager {
   // Entities stores sorted by zIndex
   public entities: TileBoundIsometricEntity[] = [];
 
-  private shouldRefreshZIndeces = false;
-
   public constructor() {
     this.entities = [];
   }
 
-  public drawEntities(ctx: CanvasRenderingContext2D): void {
-    for (let entity of this.entities) {
-      entity.draw(ctx);
-    }
-  }
-
   public updateEntities(progress: number): void {
-    if (this.shouldRefreshZIndeces) {
-      this.sortEntitiesByZIndex();
-    }
-
     for (let entity of this.entities) {
       entity.update(progress);
     }
@@ -29,15 +17,6 @@ export class IsometricEntityManager {
 
   public register(entity: TileBoundIsometricEntity) {
     this.entities.push(entity);
-    this.refreshZIndecesOnNextUpdate();
-  }
-
-  public sortEntitiesByZIndex() {
-    // Keep entities sorted by z-index
-    this.entities.sort((a, b) => {
-      return a.getZIndex() - b.getZIndex();
-    });
-    this.shouldRefreshZIndeces = false;
   }
 
   public getIntersectingEntities(x: number, y: number): TileBoundIsometricEntity[] {
@@ -51,11 +30,6 @@ export class IsometricEntityManager {
     }
 
     return entities;
-  }
-
-  // Notifies IsometricEntityManager to resort the entity list by Z-index on next update
-  public refreshZIndecesOnNextUpdate() {
-    this.shouldRefreshZIndeces = true;
   }
 
 }

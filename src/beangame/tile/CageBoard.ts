@@ -105,9 +105,3 @@ export const cageBoardConfig: IsometricBoardConfig = {
     ['sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust'],
   ]
 };
-
-export const cageTileFactories: TileFactories = {
-  PlainTile: coords => {
-    return new PlainTile(coords);
-  }
-};

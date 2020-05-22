@@ -4,25 +4,24 @@ import {IsometricBoard} from "../../engine/board/IsometricBoard";
 import {Tile} from "../../engine/board/Tile";
 import {Wheel} from "../entity/Wheel";
 import {PlainEntity} from "../entity/PlainEntity";
+import {DrawableManager} from "../../engine/DrawableManager";
 
 export class CageSpawner {
 
-  constructor (private entityManager: IsometricEntityManager, private imageProvider: ImageProvider) {
+  constructor (private drawableManager: DrawableManager, private imageProvider: ImageProvider) {
   }
 
   spawnWheel(board: IsometricBoard, tile: Tile) {
-    const wheel = new Wheel(board, this.entityManager);
+    const wheel = new Wheel(board, this.drawableManager);
     wheel.setOriginTile(tile);
     wheel.setupResources(this.imageProvider);
-    this.entityManager.register(wheel);
     return wheel;
   }
 
   spawnFoodBowl(board: IsometricBoard, tile: Tile) {
-    const bowl = new PlainEntity(board, this.entityManager);
+    const bowl = new PlainEntity(board, this.drawableManager);
     bowl.setOriginTile(tile);
     bowl.setupResources(this.imageProvider);
-    this.entityManager.register(bowl);
     return bowl;
   }
 

@@ -4,6 +4,7 @@ import {Position} from "../interface/Position";
 import {ImageProvider} from "./ImageProvider";
 import {Intersectable} from "../interface/Intersectable";
 import {MouseBehaviour} from "../interface/MouseBehaviour";
+import {DrawableManager} from "../DrawableManager";
 
 export abstract class SpriteDrawable implements Drawable, Intersectable {
 
@@ -18,11 +19,19 @@ export abstract class SpriteDrawable implements Drawable, Intersectable {
   public width: number;
   public height: number;
   protected position: Position = {x: 0, y: 0};
+  protected zIndex: number;
 
   // Mouse behaviours
   private mouseDownBehaviours: MouseBehaviour[] = [];
   private mouseEnterBehaviours: MouseBehaviour[] = [];
   private mouseLeaveBehaviours: MouseBehaviour[] = [];
+
+  protected drawableManager: DrawableManager;
+
+  constructor(drawableManager: DrawableManager) {
+    this.drawableManager = drawableManager;
+    drawableManager.registerDrawable(this);
+  }
 
   draw(ctx: CanvasRenderingContext2D): void {
     if (this.currentImage) {
@@ -108,6 +117,14 @@ export abstract class SpriteDrawable implements Drawable, Intersectable {
 
   protected isImage(resource: ImageMap | HTMLImageElement): resource is HTMLImageElement {
     return 'src' in resource;
+  }
+
+  getZIndex(): number {
+    return this.zIndex;
+  }
+
+  setZIndex(index: number): void {
+    this.zIndex = index;
   }
 
 }

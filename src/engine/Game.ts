@@ -4,7 +4,6 @@ import {ClickManager} from "./mouse/ClickManager";
 import {IsometricEntityManager} from "./entity/IsometricEntityManager";
 import {CanvasManager} from "./CanvasManager";
 import {DrawableManager} from "./DrawableManager";
-import {EntityClickManager} from "./entity/EntityClickManager";
 import {ImageProvider} from "./graphics/ImageProvider";
 
 export default abstract class Game {
@@ -77,6 +76,5 @@ export default abstract class Game {
 
     const context = this.canvasManager.getContext();
     this.drawableManager.draw(context);
-    this.entityManager.drawEntities(context);
   }
 }

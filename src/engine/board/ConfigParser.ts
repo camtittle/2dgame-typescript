@@ -106,8 +106,6 @@ export class ConfigParser {
     this.entityManager.register(entity);
   }
 
-
-
 }
 
 const orientationConfigMap = {

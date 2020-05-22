@@ -7,8 +7,8 @@ import {PlainTile} from "./tile/PlainTile";
 import {TileClickManager} from "./tile/TileClickManager";
 import {config} from "./config";
 import {HamsterSpawner} from "./factory/HamsterSpawner";
-import {cageBoardConfig, cageTileFactories} from "./tile/CageBoard";
-import {EntityFactories} from "../engine/board/ConfigParser";
+import {cageBoardConfig} from "./tile/CageBoard";
+import {EntityFactories, TileFactories} from "../engine/board/ConfigParser";
 import {PlainEntity} from "./entity/PlainEntity";
 import {Orientation} from "../engine/entity/Orientation";
 
@@ -34,12 +34,8 @@ export class BeanGame extends Game {
   private buildBoard() {
     const dimen = this.canvasManager.getScaledDimensions();
 
-    const tileFactory = (position: Position) => {
-      return new PlainTile(position);
-    };
-
     this.board = new IsometricBoardBuilder()
-      .fromConfig(cageBoardConfig, cageTileFactories, this.getEntityFactories())
+      .fromConfig(cageBoardConfig, this.getTileFactories(), this.getEntityFactories())
       .withBoardDimensions(this.canvasManager.getWidth(), this.canvasManager.getHeight())
       .withPosition(0, config.boardOffsetTop)
       .withClickManager(this.clickManager)
@@ -48,14 +44,21 @@ export class BeanGame extends Game {
       .withEntityManager(this.entityManager)
       .build();
 
+    // todo: remove these
+    this.board.setTileElevation(this.board.getTile({x: 0, y: 0}), 2);
+    this.board.setTileElevation(this.board.getTile({x: 0, y: 1}), 1);
+    this.board.setTileElevation(this.board.getTile({x: 1, y: 0}), 1);
+    this.board.setTileElevation(this.board.getTile({x: 1, y: 1}), 1);
+
     this.tileClickManager.setBoard(this.board);
   }
 
   private spawnHamsterOntoBoard() {
     const startingTile = this.board.getTile({x: 0, y: 0});
-    const hamsterSpawner = new HamsterSpawner(this.entityManager, this.imageProvider);
+    const hamsterSpawner = new HamsterSpawner(this.drawableManager, this.imageProvider);
     const spawnedHamster = hamsterSpawner.spawnHamster(this.board, startingTile);
     spawnedHamster.setOrientation(Orientation.WEST);
+    this.entityManager.register(spawnedHamster);
     this.tileClickManager.registerHamsterBehaviour(spawnedHamster);
   }
 
@@ -69,10 +72,18 @@ export class BeanGame extends Game {
   private getEntityFactories(): EntityFactories {
     return {
       plainEntity: () => {
-        return new PlainEntity(this.board, this.entityManager);
+        return new PlainEntity(this.board, this.drawableManager);
       },
       richEntities: {}
     }
+  }
+
+  private getTileFactories(): TileFactories {
+    return {
+      PlainTile: coords => {
+        return new PlainTile(coords, this.drawableManager);
+      }
+    };
   }
 
 }

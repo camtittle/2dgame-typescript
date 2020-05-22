@@ -1,15 +1,14 @@
 import {Position} from "../interface/Position";
 import {SpriteDrawable} from "../graphics/SpriteDrawable";
+import {DrawableManager} from "../DrawableManager";
 
 export abstract class Tile extends SpriteDrawable {
 
-  id: string;
   private coords: Position;
-  private zIndex: number = 0;
   private elevation = 0; // in units of tileHeight
 
-  constructor(coords: Position) {
-    super();
+  constructor(coords: Position, drawableManager: DrawableManager) {
+    super(drawableManager);
     this.coords = coords;
     this.init();
   }
@@ -28,18 +27,34 @@ export abstract class Tile extends SpriteDrawable {
   public setSize(width: number, height?: number) {
     this.width = width;
     this.height = height === undefined ? width : height;
+    this.recalcZIndex();
   }
 
+  public setPosition(position: Position) {
+    super.setPosition(position);
+    this.recalcZIndex();
+  }
+
+  public recalcZIndex() {
+    const pos = this.getCoords();
+    this.setZIndex(pos.x + pos.y + this.elevation);
+    this.drawableManager.refreshZIndexesOnNextUpdate();
+  }
+
+  // Don't call this directly. Call board.setTileElevation(tile) instead to ensure mouse detection still works correctly
   public setElevation(elevation: number) {
     const elevationDiff = (this.elevation - elevation) * this.height / 2;
     this.elevation = elevation;
     const oldPos = this.getPosition();
     this.setPosition({x: oldPos.x, y: oldPos.y + elevationDiff});
+    this.recalcZIndex();
   }
 
-  private refreshElevation() {
-
+  public getElevation(): number {
+    return this.elevation;
   }
+
+
 
 }
 
