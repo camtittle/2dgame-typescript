@@ -1,5 +1,6 @@
 import {IsometricEntityManager} from "../entity/IsometricEntityManager";
-import {CanvasManager} from "../CanvasManager";
+import {ClientCanvasManager} from "../canvas/ClientCanvasManager";
+import {CanvasManager} from "../canvas/CanvasManager";
 
 export class ClickManager {
 

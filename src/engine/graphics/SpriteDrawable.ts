@@ -61,6 +61,8 @@ export abstract class SpriteDrawable implements Drawable, Intersectable {
 
   private setCurrentImageToDefault() {
     let resource = this.resources;
+    if (!resource) return;
+
     while (!this.isImage(resource)) {
       resource = resource[Object.keys(resource)[0]];
     }
@@ -103,6 +105,8 @@ export abstract class SpriteDrawable implements Drawable, Intersectable {
   }
 
   protected getImageResource(resourceId: string): HTMLImageElement {
+    if (!this.resources) return null;
+
     if (this.isImage(this.resources)) {
       throw new Error(`Error: Attempt to get image with Resource ID ${resourceId} from resource map, found single image resource instead: ${this.resourceId}`);
     } else {
@@ -116,6 +120,7 @@ export abstract class SpriteDrawable implements Drawable, Intersectable {
   }
 
   protected isImage(resource: ImageMap | HTMLImageElement): resource is HTMLImageElement {
+    if (!resource) return false;
     return 'src' in resource;
   }
 

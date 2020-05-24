@@ -2,7 +2,6 @@ import Game from "../engine/Game";
 import {ImageSourcesProvider} from "./ImageSourcesProvider";
 import {IsometricBoardBuilder} from "../engine/board/IsometricBoardBuilder";
 import {IsometricBoard} from "../engine/board/IsometricBoard";
-import {Position} from "../engine/interface/Position";
 import {PlainTile} from "./tile/PlainTile";
 import {TileClickManager} from "./tile/TileClickManager";
 import {config} from "./config";
@@ -11,10 +10,10 @@ import {cageBoardConfig} from "./tile/CageBoard";
 import {EntityFactories, TileFactories} from "../engine/board/ConfigParser";
 import {PlainEntity} from "./entity/PlainEntity";
 import {Orientation} from "../engine/entity/Orientation";
+import {ImageSourceMap} from "../engine/graphics/ImageResource";
+import {resourceId} from "./ImageSources";
 
 export class BeanGame extends Game {
-
-  protected resources = new ImageSourcesProvider().getImageSources();
 
   private tileClickManager = new TileClickManager();
   private board: IsometricBoard;
@@ -44,11 +43,12 @@ export class BeanGame extends Game {
       .withEntityManager(this.entityManager)
       .build();
 
-    // todo: remove these
+    // todo: move these to config file
     this.board.setTileElevation(this.board.getTile({x: 0, y: 0}), 2);
     this.board.setTileElevation(this.board.getTile({x: 0, y: 1}), 1);
     this.board.setTileElevation(this.board.getTile({x: 1, y: 0}), 1);
     this.board.setTileElevation(this.board.getTile({x: 1, y: 1}), 1);
+    this.board.setTileElevation(this.board.getTile({x: 5, y: 3}), 1.5);
 
     this.tileClickManager.setBoard(this.board);
   }
@@ -67,6 +67,10 @@ export class BeanGame extends Game {
     ctx.textAlign = "center";
     ctx.fillStyle = 'white';
     ctx.fillText("Loading...", this.canvasManager.getWidth() / 2, this.canvasManager.getHeight() / 2);
+  }
+
+  protected getResources(): ImageSourceMap<resourceId> {
+    return new ImageSourcesProvider().getImageSources();
   }
 
   private getEntityFactories(): EntityFactories {

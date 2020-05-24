@@ -1,6 +1,7 @@
-import {Dimensions} from "./interface/Dimensions";
+import {Dimensions} from "../interface/Dimensions";
+import {CanvasManager} from "./CanvasManager";
 
-export class CanvasManager {
+export class ClientCanvasManager implements CanvasManager {
 
   private readonly canvas: HTMLCanvasElement;
   private readonly ctx: CanvasRenderingContext2D;
@@ -34,7 +35,7 @@ export class CanvasManager {
     }
   }
 
-  public setCanvasToFillScreen() {
+  private setCanvasToFillScreen() {
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
   }

@@ -1,4 +1,4 @@
-import * as uuidv1 from 'uuid/v1';
+import uuidv1 from 'uuid/v1';
 import {Updatable} from "../interface/Updatable";
 import {SpriteDrawable} from "../graphics/SpriteDrawable";
 import {IsometricBoard} from "../board/IsometricBoard";
@@ -59,7 +59,7 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
   }
 
   private recalcZIndex() {
-    const tileZIndex = this.currentOriginTile.getZIndex();
+    const tileZIndex = Math.max(...this.currentTiles.map(t => t.getZIndex()));
     this.zIndex = this.subTileZIndex + tileZIndex;
     this.drawableManager.refreshZIndexesOnNextUpdate();
   }

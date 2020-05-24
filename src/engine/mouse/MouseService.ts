@@ -1,4 +1,4 @@
-import {CanvasManager} from "../CanvasManager";
+import {ClientCanvasManager} from "../canvas/ClientCanvasManager";
 
 export class MouseService {
 
@@ -8,7 +8,7 @@ export class MouseService {
   private _y = 0;
   public get y() { return this._y; }
 
-  constructor(private readonly canvasManager: CanvasManager) {
+  constructor(private readonly canvasManager: ClientCanvasManager) {
     window.onmousemove = (event: MouseEvent) => {
       event.preventDefault();
       this.updateMousePos(event.pageX, event.pageY);

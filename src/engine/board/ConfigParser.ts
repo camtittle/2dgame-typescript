@@ -11,6 +11,7 @@ import {Tile} from "./Tile";
 import {IsometricEntityManager} from "../entity/IsometricEntityManager";
 import {TileBoundIsometricEntity} from "../entity/TileBoundIsometricEntity";
 import {Orientation, OrientationSupport} from "../entity/Orientation";
+import {GameEnvironment} from "../GameEnvironment";
 
 export class ConfigParser {
 
@@ -49,9 +50,11 @@ export class ConfigParser {
       const tile = thisTileFactory(coords);
       if (!tile) throw new Error("Error: Tile factory " + tileType.factoryName + " returned null");
 
-      const tileResources = this.imageProvider.getImagesByResourceId(tileType.resourceId);
-      if (!tileResources) throw new Error("Cannot set resources for tile type " + tileTypeName + ". Does the resourceId correspond to a resource in the ImageProvider?");
-      tile.setResources(tileType.resourceId, tileResources);
+      if (!GameEnvironment.SERVER) {
+        const tileResources = this.imageProvider.getImagesByResourceId(tileType.resourceId);
+        if (!tileResources) throw new Error("Cannot set resources for tile type " + tileTypeName + ". Does the resourceId correspond to a resource in the ImageProvider?");
+        tile.setResources(tileType.resourceId, tileResources);
+      }
 
       return tile;
     };

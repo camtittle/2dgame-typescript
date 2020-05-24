@@ -1,14 +1,17 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
+    "outDir": "./dist-server",
     "noImplicitAny": true,
     "module": "commonjs",
-    "target": "es5",
+    "moduleResolution": "node",
+    "target": "es6",
     "sourceMap": true,
     "esModuleInterop": true
   },
+  "include": [
+    "src/server/**/*"
+  ],
   "exclude": [
-    "node_modules",
-    "src/server"
+    "node_modules"
   ]
 }

@@ -1,10 +1,14 @@
 import {ImageSourceMap} from "../engine/graphics/ImageResource";
-import {imageSources, resourceId} from "./ImageSources";
+import {GameEnvironment} from "../engine/GameEnvironment";
+import {resourceId} from "./ImageSources";
 
 export class ImageSourcesProvider {
 
   public getImageSources(): ImageSourceMap<resourceId> {
-    return imageSources;
+    if (GameEnvironment.SERVER) {
+      return null;
+    }
+    return require('./ImageSources').getImageSources();
   }
 
 }
