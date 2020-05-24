@@ -1,20 +1,7 @@
 import {ImageSourceMap} from "../engine/graphics/ImageResource";
 import {Orientation} from "../engine/entity/Orientation";
 import {GameEnvironment} from "../engine/GameEnvironment";
-
-export enum resourceId {
-  Grass = 'grass',
-  Sawdust = 'sawdustTile',
-  BlueTile = 'blueTile',
-  PinkTile = 'pinkTile',
-  CageWall = 'cageWall',
-  Wheel = 'wheel',
-  WheelLargeRhs = 'wheelLargeRhs',
-  WheelLarge = 'wheelLarge',
-  Hamster = 'hamster',
-  FoodBowl = 'foodBowl',
-  Ramp = 'ramp'
-}
+import {resourceId} from "./ResourceIds";
 
 export function getImageSources(): ImageSourceMap<resourceId> {
   if (GameEnvironment.SERVER) {
@@ -33,8 +20,8 @@ export function getImageSources(): ImageSourceMap<resourceId> {
     [resourceId.Wheel]: 'res/wheel.png',
     [resourceId.WheelLarge]: 'res/wheel-large.png',
     [resourceId.WheelLargeRhs]: 'res/wheel-large-rhs.png',
-    [resourceId.Hamster]: require('./img/hamster'),
+    [resourceId.Hamster]: require('./img/hamster').default,
     [resourceId.FoodBowl]: 'res/food-bowl.png',
-    [resourceId.Ramp]: require('./img/ramp.png')
+    [resourceId.Ramp]: require('./img/ramp.png').default
   }
 }

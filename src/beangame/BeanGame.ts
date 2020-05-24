@@ -11,7 +11,7 @@ import {EntityFactories, TileFactories} from "../engine/board/ConfigParser";
 import {PlainEntity} from "./entity/PlainEntity";
 import {Orientation} from "../engine/entity/Orientation";
 import {ImageSourceMap} from "../engine/graphics/ImageResource";
-import {resourceId} from "./ImageSources";
+import {resourceId} from "./ResourceIds";
 
 export class BeanGame extends Game {
 

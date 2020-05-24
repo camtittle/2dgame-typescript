@@ -10,15 +10,15 @@ import {CanvasManager} from "./canvas/CanvasManager";
 import {ServerCanvasManager} from "./canvas/ServerCanvasManager";
 import {ServerImageProvider} from "./graphics/ServerImageProvider";
 
-let performance: any;
-if (!performance) {
-  performance = require('perf_hooks').performance;
-}
+// let performance: any;
+// if (!performance) {
+//   performance = require('perf_hooks').performance;
+// }
 
 export default abstract class Game {
 
-  private lastRender = performance.now();
-  private lastUpdate = performance.now();
+  private lastRender = Date.now();
+  private lastUpdate = Date.now();
   private updatesPerSecond = 30;
 
   protected entityManager: IsometricEntityManager;
@@ -88,7 +88,7 @@ export default abstract class Game {
 
   private startGameLoop(): void {
     setInterval(() => {
-      const now = performance.now();
+      const now = Date.now();
       this.update(now - this.lastUpdate);
       this.lastUpdate = now;
     }, 1000 / this.updatesPerSecond);

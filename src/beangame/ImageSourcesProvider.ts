@@ -1,6 +1,6 @@
 import {ImageSourceMap} from "../engine/graphics/ImageResource";
 import {GameEnvironment} from "../engine/GameEnvironment";
-import {resourceId} from "./ImageSources";
+import {resourceId} from "./ResourceIds";
 
 export class ImageSourcesProvider {
 

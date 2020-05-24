@@ -1,5 +1,5 @@
-import {resourceId} from "../ImageSources";
 import {Tile} from "../../engine/board/Tile";
+import {resourceId} from "../ResourceIds";
 
 export class PlainTile extends Tile {
 

@@ -1,6 +1,6 @@
-import {resourceId} from "../ImageSources";
 import {TileBoundIsometricEntity} from "../../engine/entity/TileBoundIsometricEntity";
 import {OrientationSupport} from "../../engine/entity/Orientation";
+import {resourceId} from "../ResourceIds";
 
 export class Hamster extends TileBoundIsometricEntity {
 

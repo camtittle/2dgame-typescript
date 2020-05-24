@@ -1,5 +1,5 @@
 import {TileBoundIsometricEntity} from "../../engine/entity/TileBoundIsometricEntity";
-import {resourceId} from "../ImageSources";
+import {resourceId} from "../ResourceIds";
 
 export class Wheel extends TileBoundIsometricEntity {
   // TODO fix wheel resources
