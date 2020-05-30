@@ -1,29 +1,26 @@
-export class NetworkManager {
+export class ClientNetworkManager {
 
   private socket: WebSocket;
+
+  onReceiveListener: ReceiveMessageListener;
 
   constructor(private url: string) {
   }
 
   // Establish connection
-  public connect(onConnect?: () => void): NetworkManager {
+  public connect(onConnect?: () => void): ClientNetworkManager {
     this.socket = new WebSocket(this.url);
 
     this.socket.onopen = () => {
       if (onConnect) { onConnect(); }
-      this.onConnect();
     };
 
     this.socket.onmessage = (event) => {
       console.log('received msg: ', event.data);
-      this.onReceive(event.data);
+      if (this.onReceiveListener) this.onReceiveListener(event.data);
     };
 
     return this;
-  }
-
-  private onConnect() {
-    console.log('connected');
   }
 
   // send a message
@@ -31,8 +28,6 @@ export class NetworkManager {
     this.socket.send(JSON.stringify(message));
   }
 
-  public onReceive<ReceiveType>(message: ReceiveType) {
-
-  }
-
 }
+
+export type ReceiveMessageListener = (message: string) => void;

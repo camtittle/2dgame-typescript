@@ -9,8 +9,8 @@ export class HamsterSpawner {
   public constructor(private drawableManager: DrawableManager, private imageProvider: ImageProvider) {
   }
 
-  public spawnHamster(board: IsometricBoard, startingTile: Tile): Hamster {
-    const hamster = new Hamster(board, this.drawableManager);
+  public spawnHamster(id: string, board: IsometricBoard, startingTile: Tile): Hamster {
+    const hamster = new Hamster(board, this.drawableManager, id);
     hamster.setOriginTile(startingTile);
     hamster.setupResources(this.imageProvider);
     return hamster;

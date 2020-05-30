@@ -11,7 +11,7 @@ import {DrawableManager} from "../DrawableManager";
 export abstract class TileBoundIsometricEntity extends SpriteDrawable implements Updatable {
 
   protected board: IsometricBoard;
-  protected readonly _id: string = uuidv1();
+  protected readonly _id: string;
 
   protected currentOriginTile: Tile;
   protected destinationOriginTile: Tile;
@@ -35,8 +35,9 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
 
   get id() { return this._id; }
 
-  constructor(board: IsometricBoard, drawableManager: DrawableManager) {
+  constructor(board: IsometricBoard, drawableManager: DrawableManager, id?: string) {
     super(drawableManager);
+    this._id = id ? id : uuidv1();
     this.board = board;
     this.init();
   }

@@ -76,9 +76,10 @@ export default abstract class Game {
 
   // Lifecycle hook: setup and load things
   protected initialise() {
+    console.log('Game init');
   }
 
-  protected abstract drawLoadingScreen(ctx: CanvasRenderingContext2D): void;
+  protected drawLoadingScreen(ctx: CanvasRenderingContext2D): void { }
 
   protected abstract getResources(): ImageSourceMap<any>;
 

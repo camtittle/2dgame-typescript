@@ -6,7 +6,8 @@
     "moduleResolution": "node",
     "target": "es6",
     "sourceMap": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "typeRoots" : ["./node_modules/@types", "./@types"]
   },
   "include": [
     "src/server/**/*"

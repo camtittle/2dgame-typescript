@@ -1,11 +1,8 @@
-import {Websocket} from "./websocket/Websocket";
-import {BeanGame} from "../beangame/BeanGame";
+import {BeanGameServer} from "./BeanGameServer";
 
-const ws = new Websocket();
-console.log(ws);
 
 console.log('Booting Bean Game server');
-const game = new BeanGame(true);
+const game = new BeanGameServer();
 game.boot().then(() => {
   console.log('Game server running...');
 });

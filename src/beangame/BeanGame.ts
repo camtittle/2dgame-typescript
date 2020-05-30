@@ -5,29 +5,26 @@ import {IsometricBoard} from "../engine/board/IsometricBoard";
 import {PlainTile} from "./tile/PlainTile";
 import {TileClickManager} from "./tile/TileClickManager";
 import {config} from "./config";
-import {HamsterSpawner} from "./factory/HamsterSpawner";
 import {cageBoardConfig} from "./tile/CageBoard";
 import {EntityFactories, TileFactories} from "../engine/board/ConfigParser";
 import {PlainEntity} from "./entity/PlainEntity";
-import {Orientation} from "../engine/entity/Orientation";
 import {ImageSourceMap} from "../engine/graphics/ImageResource";
 import {resourceId} from "./ResourceIds";
+import {EntitySpawner} from "./entity/EntitySpawner";
+import {HamsterSpawner} from "./factory/HamsterSpawner";
 
 export class BeanGame extends Game {
 
-  private tileClickManager = new TileClickManager();
-  private board: IsometricBoard;
+  protected tileClickManager = new TileClickManager();
+  protected board: IsometricBoard;
+  protected entitySpawner: EntitySpawner;
 
   public async initialise() {
-    super.initialise();
+    await super.initialise();
+    console.log('BeanGame init');
     this.buildBoard();
-    this.spawnHamsterOntoBoard();
-  }
-
-  private initNetwork() {
-    // const networkManager = new NetworkManager(config.websocketUrl).connect(() => {
-    //   networkManager.send({action: 'hello'});
-    // });
+    const hamsterSpawner = new HamsterSpawner(this.drawableManager, this.imageProvider);
+    this.entitySpawner = new EntitySpawner(this.board, this.entityManager, this.tileClickManager, hamsterSpawner);
   }
 
   private buildBoard() {
@@ -51,22 +48,6 @@ export class BeanGame extends Game {
     this.board.setTileElevation(this.board.getTile({x: 5, y: 3}), 1.5);
 
     this.tileClickManager.setBoard(this.board);
-  }
-
-  private spawnHamsterOntoBoard() {
-    const startingTile = this.board.getTile({x: 0, y: 0});
-    const hamsterSpawner = new HamsterSpawner(this.drawableManager, this.imageProvider);
-    const spawnedHamster = hamsterSpawner.spawnHamster(this.board, startingTile);
-    spawnedHamster.setOrientation(Orientation.WEST);
-    this.entityManager.register(spawnedHamster);
-    this.tileClickManager.registerHamsterBehaviour(spawnedHamster);
-  }
-
-  protected drawLoadingScreen(ctx: CanvasRenderingContext2D): void {
-    ctx.font = '60px Arial';
-    ctx.textAlign = "center";
-    ctx.fillStyle = 'white';
-    ctx.fillText("Loading...", this.canvasManager.getWidth() / 2, this.canvasManager.getHeight() / 2);
   }
 
   protected getResources(): ImageSourceMap<resourceId> {

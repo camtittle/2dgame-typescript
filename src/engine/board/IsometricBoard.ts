@@ -163,7 +163,7 @@ export class IsometricBoard implements Intersectable {
       }
 
       const tile =  this.getTile({x: Math.trunc(tileX), y: Math.trunc(tileY)});
-      if (tile.getElevation() === elevation) return tile;
+      if (tile && tile.getElevation() === elevation) return tile;
     }
   }
 
