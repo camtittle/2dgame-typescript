@@ -9,6 +9,7 @@ import {MessageType} from "../network/MessageType";
 export class Hamster extends TileBoundIsometricEntity {
 
   private networkManager: ClientNetworkManager;
+  private playable = false;
 
   resourceId = resourceId.Hamster;
 
@@ -23,19 +24,25 @@ export class Hamster extends TileBoundIsometricEntity {
     this.networkManager = nm;
   }
 
+  public setPlayable(playable: boolean) {
+    this.playable = playable;
+  }
+
   public setOriginTile(tile: Tile) {
     super.setOriginTile(tile);
     this.sendLocationUpdateToServer();
   }
 
   private sendLocationUpdateToServer() {
-    if (!this.networkManager) {
+    if (this.playable && !this.networkManager) {
       console.warn('Cannot send location update - no network manager provided to hamster entity');
+      return;
+    } else if (!this.playable) {
       return;
     }
 
     const update: PlayerLocationUpdate = {
-      messageType: MessageType.ConnectionResponse,
+      messageType: MessageType.PlayerLocationUpdate,
       originTileCoords: this.getCurrentTile().getCoords()
     };
     this.networkManager.send(update);

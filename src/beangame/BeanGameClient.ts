@@ -1,7 +1,7 @@
 import {BeanGame} from "./BeanGame";
 import {ClientNetworkManager} from "../engine/network/ClientNetworkManager";
 import {config} from "./config";
-import {HamsterSpawner} from "./factory/HamsterSpawner";
+import {HamsterFactory} from "./factory/HamsterFactory";
 import {Orientation} from "../engine/entity/Orientation";
 import {MessageHandler} from "./network/MessageHandler";
 

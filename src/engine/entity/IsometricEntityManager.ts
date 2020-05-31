@@ -32,4 +32,12 @@ export class IsometricEntityManager {
     return entities;
   }
 
+  public getEntityWithId(id: string) {
+    for (let entity of this.entities) {
+      if (entity.id === id) return entity;
+    }
+
+    return null;
+  }
+
 }

@@ -20,7 +20,7 @@ export class WebsocketServer {
       this.onConnectionListeners.forEach(listener => listener(socket));
 
       socket.on('message', (msg) => {
-        console.log(`Received message from user ${socket}. Message contents: ${msg} `);
+        console.log(`Received message from user ${socket.id}. Message contents: ${msg} `);
         this.onReceiveMessageListeners.forEach(listener => listener(socket, JSON.parse(msg as string)))
       });
     });

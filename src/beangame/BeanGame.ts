@@ -11,7 +11,7 @@ import {PlainEntity} from "./entity/PlainEntity";
 import {ImageSourceMap} from "../engine/graphics/ImageResource";
 import {resourceId} from "./ResourceIds";
 import {EntitySpawner} from "./entity/EntitySpawner";
-import {HamsterSpawner} from "./factory/HamsterSpawner";
+import {HamsterFactory} from "./factory/HamsterFactory";
 
 export class BeanGame extends Game {
 
@@ -23,7 +23,7 @@ export class BeanGame extends Game {
     await super.initialise();
     console.log('BeanGame init');
     this.buildBoard();
-    const hamsterSpawner = new HamsterSpawner(this.drawableManager, this.imageProvider);
+    const hamsterSpawner = new HamsterFactory(this.drawableManager, this.imageProvider);
     this.entitySpawner = new EntitySpawner(this.board, this.entityManager, this.tileClickManager, hamsterSpawner);
   }
 

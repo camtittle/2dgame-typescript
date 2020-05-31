@@ -70,6 +70,12 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
     this.timeSinceLastMove = 0;
   }
 
+  public setOriginTileCoordinates(position: Position) {
+    const tile = this.board.getTile(position);
+    if (!tile) throw new Error("Cannot set origin tile. Coordinates out of range: " + JSON.stringify(position));
+    this.setOriginTile(tile);
+  }
+
   public setOriginTile(tile: Tile) {
     this.currentOriginTile = tile;
     this.recalcSizeAndPosition();
