@@ -15,6 +15,11 @@ export class DrawableManager {
     this.refreshZIndexesOnNextUpdate();
   }
 
+  public deregisterDrawable(drawable: Drawable) {
+    const index = this.drawables.indexOf(drawable);
+    if (index >= 0) this.drawables.splice(index, 1);
+  }
+
   public draw(ctx: CanvasRenderingContext2D) {
     if (this.shouldRefreshZIndexes) {
       this.sortByZIndex();

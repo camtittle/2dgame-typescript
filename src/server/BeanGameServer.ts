@@ -23,6 +23,10 @@ export class BeanGameServer extends BeanGame {
       messageHandler.handlePlayerConnect(socket.id);
     });
 
+    this.server.addOnDisconnectListener(socket => {
+      messageHandler.handlePlayerDisconnect(socket.id);
+    });
+
     this.server.addOnReceiveMessageListener((socket, msg) => {
       messageHandler.handleMessage(socket.id, msg);
     });

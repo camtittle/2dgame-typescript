@@ -21,10 +21,9 @@ export class BeanGame extends Game {
 
   public async initialise() {
     await super.initialise();
-    console.log('BeanGame init');
     this.buildBoard();
     const hamsterSpawner = new HamsterFactory(this.drawableManager, this.imageProvider);
-    this.entitySpawner = new EntitySpawner(this.board, this.entityManager, this.tileClickManager, hamsterSpawner);
+    this.entitySpawner = new EntitySpawner(this.board, this.entityManager, this.drawableManager, this.tileClickManager, hamsterSpawner);
   }
 
   private buildBoard() {

@@ -7,6 +7,7 @@ export class WebsocketServer {
   private port = 8080;
 
   private onConnectionListeners: ConnectEventListener[] = [];
+  private onDisconnectListeners: ConnectEventListener[] = [];
   private onReceiveMessageListeners: ReceiveMessageEventListener[] = [];
 
 
@@ -23,11 +24,20 @@ export class WebsocketServer {
         console.log(`Received message from user ${socket.id}. Message contents: ${msg} `);
         this.onReceiveMessageListeners.forEach(listener => listener(socket, JSON.parse(msg as string)))
       });
+
+      socket.on('close', (code, reason) => {
+        console.log('Client disconnected: ', socket.id);
+        this.onDisconnectListeners.forEach(listener => listener(socket));
+      })
     });
   }
 
   addOnConnectListener(listener: ConnectEventListener) {
     this.onConnectionListeners.push(listener);
+  }
+
+  addOnDisconnectListener(listener: ConnectEventListener) {
+    this.onDisconnectListeners.push(listener);
   }
 
   addOnReceiveMessageListener(listener: ReceiveMessageEventListener) {

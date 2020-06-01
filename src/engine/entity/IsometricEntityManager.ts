@@ -19,6 +19,11 @@ export class IsometricEntityManager {
     this.entities.push(entity);
   }
 
+  public deregister(id: string) {
+    const index = this.entities.findIndex(e => e.id === id);
+    if (index >= 0) this.entities.splice(index, 1);
+  }
+
   public getIntersectingEntities(x: number, y: number): TileBoundIsometricEntity[] {
     const entities: TileBoundIsometricEntity[] = [];
     for (let entity of this.entities) {

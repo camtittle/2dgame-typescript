@@ -28,6 +28,15 @@ export class ServerMessageHandler {
     this.websocketServer.sendToClient(clientId, JSON.stringify(response));
   }
 
+  handlePlayerDisconnect(clientId: string) {
+    this.entitySpawner.despawnEntity(clientId);
+  }
+
+  private removePlayer(id: string) {
+    const entity = this.entityManager.getEntityWithId(id);
+
+  }
+
   private handlePlayerLocationUpdate(clientId: string, message: Message) {
     if (!isPlayerLocationUpdate(message)) {
       throw new Error('Malformed message: ' + JSON.stringify(message));
