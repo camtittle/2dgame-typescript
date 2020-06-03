@@ -189,6 +189,10 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
     }
   }
 
+  public getOrientation(): Orientation {
+    return this.orientation;
+  }
+
   public get orientationSupport(): OrientationSupport {
     return this._orientationSupport;
   }

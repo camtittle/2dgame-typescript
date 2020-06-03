@@ -52,10 +52,10 @@ export class WebsocketServer {
     });
   }
 
-  sendToAll(message: string, exclude: ws.Client) {
+  sendToAll(message: string, excludeId: string = null) {
     this.server.clients.forEach((client: ws.Client) => {
-      if (client != exclude && client.readyState === ws.OPEN) {
-        console.log('sending message to id: ' + (<any>client).clientId);
+      if (client.id !== excludeId && client.readyState === ws.OPEN) {
+        console.log('sending message to id: ' + client.id);
         client.send(message);
       }
     });

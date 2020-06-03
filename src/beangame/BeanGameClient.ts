@@ -19,15 +19,13 @@ export class BeanGameClient extends BeanGame {
 
   private initNetwork() {
     const networkManager = new ClientNetworkManager(config.websocketUrl);
-    const messageHandler = new MessageHandler(this.entitySpawner, networkManager);
+    const messageHandler = new MessageHandler(this.entitySpawner, this.entityManager, networkManager);
 
     networkManager.onReceiveListener = msg => {
       messageHandler.handleMessage(JSON.parse(msg));
     };
 
-    networkManager.connect(() => {
-      // networkManager.send({action: ''});
-    });
+    networkManager.connect();
   }
 
   protected drawLoadingScreen(ctx: CanvasRenderingContext2D): void {

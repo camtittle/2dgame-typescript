@@ -4,6 +4,7 @@ import {IsometricBoard} from "../../engine/board/IsometricBoard";
 import {TileClickManager} from "../tile/TileClickManager";
 import {ClientNetworkManager} from "../../engine/network/ClientNetworkManager";
 import {DrawableManager} from "../../engine/DrawableManager";
+import {Position} from "../../engine/interface/Position";
 
 export class EntitySpawner {
 
@@ -20,8 +21,8 @@ export class EntitySpawner {
     this.tileClickManager.registerHamsterBehaviour(spawnedHamster);
   }
 
-  spawnHamsterNonPlayable(id: string) {
-    const startingTile = this.board.getTile({x: 0, y: 0});
+  spawnHamsterNonPlayable(id: string, coords: Position) {
+    const startingTile = this.board.getTile(coords);
     const spawnedHamster = this.hamsterFactory.buildHamsterNonPlayable(id, this.board, startingTile);
     this.entityManager.register(spawnedHamster);
   }

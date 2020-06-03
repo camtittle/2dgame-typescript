@@ -42,6 +42,7 @@ export class Hamster extends TileBoundIsometricEntity {
     }
 
     const update: PlayerLocationUpdate = {
+      id: this.id,
       messageType: MessageType.PlayerLocationUpdate,
       originTileCoords: this.getCurrentTile().getCoords()
     };
