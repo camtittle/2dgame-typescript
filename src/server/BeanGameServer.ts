@@ -1,6 +1,7 @@
 import {BeanGame} from "../beangame/BeanGame";
 import {WebsocketServer} from "./websocket/WebsocketServer";
-import {ServerMessageHandler} from "./MessageHandler";
+import {ServerMessageHandler} from "./messages/MessageHandler";
+import {MessageSender} from "./messages/MessageSender";
 
 export class BeanGameServer extends BeanGame {
 
@@ -17,7 +18,8 @@ export class BeanGameServer extends BeanGame {
 
   private initNetwork() {
     this.server = new WebsocketServer();
-    const messageHandler = new ServerMessageHandler(this.entityManager, this.entitySpawner, this.server);
+    const messageSender = new MessageSender(this.server);
+    const messageHandler = new ServerMessageHandler(this.entityManager, this.entitySpawner, messageSender);
 
     this.server.addOnConnectListener(socket => {
       messageHandler.handlePlayerConnect(socket.id);

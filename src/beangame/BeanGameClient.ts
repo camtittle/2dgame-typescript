@@ -4,6 +4,7 @@ import {config} from "./config";
 import {HamsterFactory} from "./factory/HamsterFactory";
 import {Orientation} from "../engine/entity/Orientation";
 import {MessageHandler} from "./network/MessageHandler";
+import {Message} from "./network/Message";
 
 export class BeanGameClient extends BeanGame {
 
@@ -22,7 +23,7 @@ export class BeanGameClient extends BeanGame {
     const messageHandler = new MessageHandler(this.entitySpawner, this.entityManager, networkManager);
 
     networkManager.onReceiveListener = msg => {
-      messageHandler.handleMessage(JSON.parse(msg));
+      messageHandler.handleMessage(msg as Message);
     };
 
     networkManager.connect();

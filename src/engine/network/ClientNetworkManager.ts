@@ -17,7 +17,7 @@ export class ClientNetworkManager {
 
     this.socket.onmessage = (event) => {
       console.log('received msg: ', event.data);
-      if (this.onReceiveListener) this.onReceiveListener(event.data);
+      if (this.onReceiveListener) this.onReceiveListener(JSON.parse(event.data));
     };
 
     return this;
@@ -30,4 +30,4 @@ export class ClientNetworkManager {
 
 }
 
-export type ReceiveMessageListener = (message: string) => void;
+export type ReceiveMessageListener = (message: any) => void;

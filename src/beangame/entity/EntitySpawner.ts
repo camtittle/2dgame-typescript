@@ -5,6 +5,7 @@ import {TileClickManager} from "../tile/TileClickManager";
 import {ClientNetworkManager} from "../../engine/network/ClientNetworkManager";
 import {DrawableManager} from "../../engine/DrawableManager";
 import {Position} from "../../engine/interface/Position";
+import {Hamster} from "./Hamster";
 
 export class EntitySpawner {
 
@@ -14,17 +15,19 @@ export class EntitySpawner {
               private tileClickManager: TileClickManager,
               private hamsterFactory: HamsterFactory) {}
 
-  spawnHamsterPlayable(id: string, networkManager: ClientNetworkManager) {
+  spawnHamsterPlayable(id: string, networkManager: ClientNetworkManager): Hamster {
     const startingTile = this.board.getTile({x: 0, y: 0});
     const spawnedHamster = this.hamsterFactory.buildHamsterPlayable(id, this.board, startingTile, networkManager);
     this.entityManager.register(spawnedHamster);
     this.tileClickManager.registerHamsterBehaviour(spawnedHamster);
+    return spawnedHamster;
   }
 
-  spawnHamsterNonPlayable(id: string, coords: Position) {
+  spawnHamsterNonPlayable(id: string, coords: Position): Hamster {
     const startingTile = this.board.getTile(coords);
     const spawnedHamster = this.hamsterFactory.buildHamsterNonPlayable(id, this.board, startingTile);
     this.entityManager.register(spawnedHamster);
+    return spawnedHamster;
   }
 
   despawnEntity(id: string) {
