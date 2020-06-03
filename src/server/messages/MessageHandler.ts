@@ -43,8 +43,8 @@ export class ServerMessageHandler {
       throw new Error('Entity not found. Cannot update location of entity with ID ' + clientId);
     }
 
-    console.log('setting origin tile of entity: ', message.originTileCoords);
-    entity.setOriginTileCoordinates(message.originTileCoords);
+    console.log('setting origin tile of entity: ', message.destinationTileCoords);
+    entity.setDestinationTileCoordinates(message.destinationTileCoords);
     this.messageSender.broadcastEntityPosition(entity);
   }
 

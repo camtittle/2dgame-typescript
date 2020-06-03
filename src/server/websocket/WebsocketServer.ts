@@ -55,7 +55,6 @@ export class WebsocketServer {
   sendToAll(message: string, excludeId: string = null) {
     this.server.clients.forEach((client: ws.Client) => {
       if (client.id !== excludeId && client.readyState === ws.OPEN) {
-        console.log('sending message to id: ' + client.id);
         client.send(message);
       }
     });

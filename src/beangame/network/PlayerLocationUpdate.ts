@@ -3,9 +3,9 @@ import {Position} from "../../engine/interface/Position";
 
 export interface PlayerLocationUpdate extends Message {
   id: string;
-  originTileCoords: Position;
+  destinationTileCoords: Position;
 }
 
 export function isPlayerLocationUpdate(msg: any): msg is PlayerLocationUpdate {
-  return !!msg.originTileCoords;
+  return !!msg.destinationTileCoords;
 }

@@ -44,7 +44,7 @@ export class MessageSender {
     const update: PlayerLocationUpdate = {
       messageType: MessageType.PlayerLocationUpdate,
       id: entity.id,
-      originTileCoords: entity.getCurrentTile().getCoords()
+      destinationTileCoords: entity.getDestinationTile().getCoords()
     };
 
     this.websocketServer.sendToAll(JSON.stringify(update), entity.id);

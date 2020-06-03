@@ -28,8 +28,8 @@ export class Hamster extends TileBoundIsometricEntity {
     this.playable = playable;
   }
 
-  public setOriginTile(tile: Tile) {
-    super.setOriginTile(tile);
+  public setDestinationTile(tile: Tile) {
+    super.setDestinationTile(tile);
     this.sendLocationUpdateToServer();
   }
 
@@ -44,7 +44,7 @@ export class Hamster extends TileBoundIsometricEntity {
     const update: PlayerLocationUpdate = {
       id: this.id,
       messageType: MessageType.PlayerLocationUpdate,
-      originTileCoords: this.getCurrentTile().getCoords()
+      destinationTileCoords: this.getDestinationTile().getCoords()
     };
     this.networkManager.send(update);
   }

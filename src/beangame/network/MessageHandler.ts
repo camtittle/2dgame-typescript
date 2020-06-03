@@ -45,7 +45,7 @@ export class MessageHandler {
   private handlePlayerLocationUpdate(msg: PlayerLocationUpdate) {
     const entity = this.entityManager.getEntityWithId(msg.id);
     if (entity) {
-      entity.setOriginTileCoordinates(msg.originTileCoords);
+      entity.setDestinationTileCoordinates(msg.destinationTileCoords);
     }
   }
 
