@@ -6,6 +6,7 @@ import {ClientNetworkManager} from "../../engine/network/ClientNetworkManager";
 import {PlayerLocationUpdate} from "./PlayerLocationUpdate";
 import {IsometricEntityManager} from "../../engine/entity/IsometricEntityManager";
 import {NewPlayer} from "./NewPlayer";
+import {PlayerDisconnect} from "./PlayerDisconnect";
 
 export class MessageHandler {
 
@@ -27,6 +28,10 @@ export class MessageHandler {
         this.handleNewPlayerNotification(msg as NewPlayer);
         break;
       }
+      case MessageType.PlayerDisconnect: {
+        this.handlePlayerDisconnect(msg as PlayerDisconnect);
+        break;
+      }
     }
   }
 
@@ -46,6 +51,10 @@ export class MessageHandler {
 
   private handleNewPlayerNotification(msg: NewPlayer) {
     this.entitySpawner.spawnHamsterNonPlayable(msg.id, msg.originTileCoords);
+  }
+
+  private handlePlayerDisconnect(msg: PlayerDisconnect) {
+    this.entitySpawner.despawnEntity(msg.clientId);
   }
 
 }

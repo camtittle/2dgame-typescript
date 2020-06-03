@@ -1,5 +1,6 @@
 export enum MessageType {
   ConnectionResponse,
   PlayerLocationUpdate,
-  NewPlayer
+  NewPlayer,
+  PlayerDisconnect
 }

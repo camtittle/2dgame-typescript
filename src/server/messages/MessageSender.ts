@@ -5,6 +5,7 @@ import {WebsocketServer} from "../websocket/WebsocketServer";
 import {Hamster} from "../../beangame/entity/Hamster";
 import {NewPlayer} from "../../beangame/network/NewPlayer";
 import {ConnectionResponse} from "../../beangame/network/ConnectionResponse";
+import {PlayerDisconnect} from "../../beangame/network/PlayerDisconnect";
 
 export class MessageSender {
 
@@ -29,6 +30,14 @@ export class MessageSender {
       originTileCoords: player.getCurrentTile().getCoords()
     };
     this.websocketServer.sendToAll(JSON.stringify(newPlayerNotification), player.id);
+  }
+
+  broadcastPlayerDisconnect(clientId: string) {
+    const notification: PlayerDisconnect = {
+      messageType: MessageType.PlayerDisconnect,
+      clientId: clientId
+    };
+    this.websocketServer.sendToAll(JSON.stringify(notification), clientId);
   }
 
   broadcastEntityPosition(entity: TileBoundIsometricEntity) {

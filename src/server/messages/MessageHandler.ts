@@ -30,11 +30,7 @@ export class ServerMessageHandler {
 
   handlePlayerDisconnect(clientId: string) {
     this.entitySpawner.despawnEntity(clientId);
-  }
-
-  private removePlayer(id: string) {
-    const entity = this.entityManager.getEntityWithId(id);
-
+    this.messageSender.broadcastPlayerDisconnect(clientId);
   }
 
   private handlePlayerLocationUpdate(clientId: string, message: Message) {
