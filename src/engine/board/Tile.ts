@@ -41,19 +41,14 @@ export abstract class Tile extends SpriteDrawable {
     this.drawableManager.refreshZIndexesOnNextUpdate();
   }
 
-  // Don't call this directly. Call board.setTileElevation(tile) instead to ensure mouse detection still works correctly
+  // Requires a board refresh
   public setElevation(elevation: number) {
-    const elevationDiff = (this.elevation - elevation) * this.height / 2;
     this.elevation = elevation;
-    const oldPos = this.getPosition();
-    this.setPosition({x: oldPos.x, y: oldPos.y + elevationDiff});
-    this.recalcZIndex();
   }
 
   public getElevation(): number {
     return this.elevation;
   }
-
 
 
 }

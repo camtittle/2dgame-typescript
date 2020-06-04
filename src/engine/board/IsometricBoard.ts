@@ -52,9 +52,12 @@ export class IsometricBoard implements Intersectable {
         const tileXPos = tileWidth/2 * (x-y-1) + (this.boardDimensions.width/2) + this.boardPosition.x;
         const tileYPos = tileHeight/2 * (x+y) + this.boardPosition.y;
 
-        tile.setPosition({x: tileXPos, y: tileYPos});
-        tile.setSize(tileWidth, tileHeight);
+        const elevation = tile.getElevation();
+        const elevationDiff = elevation * tileHeight / 2;
+        this.addElevation(elevation);
 
+        tile.setPosition({x: tileXPos, y: tileYPos - elevationDiff});
+        tile.setSize(tileWidth, tileHeight);
       });
     }
   }
@@ -167,12 +170,10 @@ export class IsometricBoard implements Intersectable {
     }
   }
 
-  public setTileElevation(tile: Tile, elevation: number) {
-    tile.setElevation(elevation);
+  public addElevation(elevation: number) {
     if (!this.tileElevations.includes(elevation)) {
       this.tileElevations.push(elevation);
       this.tileElevations.sort((a, b) => b - a);
-      console.log(this.tileElevations);
     }
   }
 

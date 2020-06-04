@@ -50,6 +50,10 @@ export class ConfigParser {
       const tile = thisTileFactory(coords);
       if (!tile) throw new Error("Error: Tile factory " + tileType.factoryName + " returned null");
 
+      if (tileType.elevation) {
+        tile.setElevation(tileType.elevation);
+      }
+
       if (!GameEnvironment.SERVER) {
         const tileResources = this.imageProvider.getImagesByResourceId(tileType.resourceId);
         if (!tileResources) throw new Error("Cannot set resources for tile type " + tileTypeName + ". Does the resourceId correspond to a resource in the ImageProvider?");

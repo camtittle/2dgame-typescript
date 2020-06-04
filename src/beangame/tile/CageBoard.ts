@@ -1,5 +1,3 @@
-import {TileFactories} from "../../engine/board/ConfigParser";
-import {PlainTile} from "./PlainTile";
 import {IsometricBoardConfig, OrientationConfig} from "../../engine/board/IsometricBoardConfig";
 
 export const cageBoardConfig: IsometricBoardConfig = {
@@ -13,6 +11,11 @@ export const cageBoardConfig: IsometricBoardConfig = {
     blue: {
       resourceId: 'blueTile',
       factoryName: 'PlainTile'
+    },
+    blueElev1: {
+      resourceId: 'blueTile',
+      factoryName: 'PlainTile',
+      elevation: 1
     },
     pink: {
       resourceId: 'pinkTile',
@@ -87,8 +90,8 @@ export const cageBoardConfig: IsometricBoardConfig = {
     }
   },
   tiles: [
-    ['blue', 'blue', 'blue', 'blue', 'blue', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust'],
-    ['blue', 'blue', 'blue', 'blue', 'blue', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust'],
+    ['blueElev1', 'blueElev1', 'blue', 'blue', 'blue', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust'],
+    ['blueElev1', 'blueElev1', 'blue', 'blue', 'blue', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust'],
     ['blue', 'pink', 'blue', 'blue', 'blue', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust'],
     ['blue', 'pink', 'blue', 'blue', 'blue', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust'],
     ['sawdust', 'sawdust', 'pink', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust', 'sawdust'],

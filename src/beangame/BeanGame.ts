@@ -39,13 +39,6 @@ export class BeanGame extends Game {
       .withEntityManager(this.entityManager)
       .build();
 
-    // todo: move these to config file
-    this.board.setTileElevation(this.board.getTile({x: 0, y: 0}), 2);
-    this.board.setTileElevation(this.board.getTile({x: 0, y: 1}), 1);
-    this.board.setTileElevation(this.board.getTile({x: 1, y: 0}), 1);
-    this.board.setTileElevation(this.board.getTile({x: 1, y: 1}), 1);
-    this.board.setTileElevation(this.board.getTile({x: 5, y: 3}), 1.5);
-
     this.tileClickManager.setBoard(this.board);
   }
 
