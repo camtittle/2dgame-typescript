@@ -6,16 +6,19 @@ export const cageBoardConfig: IsometricBoardConfig = {
   tileTypes: {
     sawdust: {
       resourceId: 'sawdustTile',
-      factoryName: 'PlainTile'
+      factoryName: 'PlainTile',
+      depth: 1
     },
     blue: {
       resourceId: 'blueTile',
-      factoryName: 'PlainTile'
+      factoryName: 'PlainTile',
+      depth: 1
     },
     blueElev1: {
       resourceId: 'blueTile',
       factoryName: 'PlainTile',
-      elevation: 1
+      elevation: 1,
+      depth: 1
     },
     pink: {
       resourceId: 'pinkTile',

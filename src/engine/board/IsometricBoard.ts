@@ -62,15 +62,6 @@ export class IsometricBoard implements Intersectable {
     }
   }
 
-  draw(context: CanvasRenderingContext2D) {
-    this.forEachTile(tile => {
-      tile.draw(context);
-    });
-    this.forEachTile(tile => {
-      tile.drawOverlay(context);
-    });
-  }
-
   public setupTileImages(imageProvider: ImageProvider) {
     this.forEachTile(tile => {
       tile.setupResources(imageProvider);

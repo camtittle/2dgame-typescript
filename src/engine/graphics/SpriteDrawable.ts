@@ -42,8 +42,13 @@ export abstract class SpriteDrawable implements Drawable, Intersectable {
         ctx.stroke();
       }
 
-      ctx.drawImage(this.currentImage, this.position.x, this.position.y, this.width, this.height);
+      this.drawImage(ctx);
+
     }
+  }
+
+  protected drawImage(ctx: CanvasRenderingContext2D) {
+    ctx.drawImage(this.currentImage, this.position.x, this.position.y, this.width, this.height);
   }
 
   // Uses ImageProvider to get defined internal image resources

@@ -6,6 +6,7 @@ export interface IsometricBoardConfig {
       resourceId: string;
       factoryName: string;
       elevation?: number;
+      depth?: number;
     }
   },
   plainEntities?: {

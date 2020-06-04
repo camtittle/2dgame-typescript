@@ -54,6 +54,10 @@ export class ConfigParser {
         tile.setElevation(tileType.elevation);
       }
 
+      if (tileType.depth) {
+        tile.setDepth(tileType.depth);
+      }
+
       if (!GameEnvironment.SERVER) {
         const tileResources = this.imageProvider.getImagesByResourceId(tileType.resourceId);
         if (!tileResources) throw new Error("Cannot set resources for tile type " + tileTypeName + ". Does the resourceId correspond to a resource in the ImageProvider?");
