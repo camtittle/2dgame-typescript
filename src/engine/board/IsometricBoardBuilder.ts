@@ -21,6 +21,7 @@ export class IsometricBoardBuilder {
   private drawableManager: DrawableManager;
   private clickManager: ClickManager;
   private entityManager: IsometricEntityManager;
+  private panning = false;
 
   private config: IsometricBoardConfig;
   private tileFactoriesForConfig: TileFactories;
@@ -61,6 +62,11 @@ export class IsometricBoardBuilder {
   withPosition(x: number, y: number) {
     this.boardPosX = x;
     this.boardPosY = y;
+    return this;
+  }
+
+  withPanning() {
+    this.panning = true;
     return this;
   }
 

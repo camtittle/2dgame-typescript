@@ -13,7 +13,7 @@ export class IsometricBoard implements Intersectable {
   private eachTileDimensions: Dimensions;
   private boardDimensions: Dimensions;
   private boardPosition: Position = {x: 0, y: 0};
-  private zoomLevel = 1;
+  private zoomLevel = 1.5;
 
   // Keeps track of the set of different elevations that tiles have in the board
   private tileElevations = [0];
@@ -38,6 +38,10 @@ export class IsometricBoard implements Intersectable {
   public setBoardPosition(position: Position) {
     this.boardPosition = position;
     this.updateTileSizeAndPositions();
+  }
+
+  public getBoardPosition(): Position {
+    return {x: this.boardPosition.x, y: this.boardPosition.y}; // clone
   }
 
   // Recalculate size of each tile to fit tiles horizontally

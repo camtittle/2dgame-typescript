@@ -9,11 +9,7 @@ import {GameEnvironment} from "./GameEnvironment";
 import {CanvasManager} from "./canvas/CanvasManager";
 import {ServerCanvasManager} from "./canvas/ServerCanvasManager";
 import {ServerImageProvider} from "./graphics/ServerImageProvider";
-
-// let performance: any;
-// if (!performance) {
-//   performance = require('perf_hooks').performance;
-// }
+import {UpdatableManager} from "./UpdatableManager";
 
 export default abstract class Game {
 
@@ -23,6 +19,7 @@ export default abstract class Game {
 
   protected entityManager: IsometricEntityManager;
   protected drawableManager: DrawableManager;
+  protected updatableManager: UpdatableManager;
   protected canvasManager: CanvasManager;
   protected clickManager: ClickManager;
   protected imageProvider: ImageProvider;
@@ -41,8 +38,12 @@ export default abstract class Game {
     }
 
     this.setupCanvasManager(canvasElementId);
-    this.entityManager = new IsometricEntityManager();
     this.drawableManager = new DrawableManager();
+    this.updatableManager = new UpdatableManager();
+
+    this.entityManager = new IsometricEntityManager();
+    this.updatableManager.registerUpdatable(this.entityManager);
+
     this.clickManager = new ClickManager(this.canvasManager, this.entityManager);
   }
 
@@ -107,7 +108,7 @@ export default abstract class Game {
   }
 
   private update(progress: number): void {
-    this.entityManager.updateEntities(progress);
+    this.updatableManager.update(progress);
   }
 
   private draw(): void {

@@ -12,6 +12,7 @@ import {ImageSourceMap} from "../engine/graphics/ImageResource";
 import {resourceId} from "./ResourceIds";
 import {EntitySpawner} from "./entity/EntitySpawner";
 import {HamsterFactory} from "./factory/HamsterFactory";
+import {BoardPanner} from "../engine/board/BoardPanner";
 
 export class BeanGame extends Game {
 
@@ -33,11 +34,16 @@ export class BeanGame extends Game {
       .fromConfig(cageBoardConfig, this.getTileFactories(), this.getEntityFactories())
       .withBoardDimensions(this.canvasManager.getWidth(), this.canvasManager.getHeight())
       .withPosition(0, config.boardOffsetTop)
+      .withPanning()
       .withClickManager(this.clickManager)
       .withImageProvider(this.imageProvider)
       .withDrawableManager(this.drawableManager)
       .withEntityManager(this.entityManager)
       .build();
+
+    const panner = new BoardPanner(this.board, this.clickManager, this.entityManager);
+    panner.enableCanvasEdgePanning(this.canvasManager);
+    this.updatableManager.registerUpdatable(panner);
 
     this.tileClickManager.setBoard(this.board);
   }

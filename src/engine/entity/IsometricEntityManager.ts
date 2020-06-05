@@ -1,6 +1,7 @@
 import {TileBoundIsometricEntity} from "./TileBoundIsometricEntity";
+import {Updatable} from "../interface/Updatable";
 
-export class IsometricEntityManager {
+export class IsometricEntityManager implements Updatable {
 
   // Entities stores sorted by zIndex
   public entities: TileBoundIsometricEntity[] = [];
@@ -9,7 +10,7 @@ export class IsometricEntityManager {
     this.entities = [];
   }
 
-  public updateEntities(progress: number): void {
+  public update(progress: number): void {
     for (let entity of this.entities) {
       entity.update(progress);
     }
@@ -43,6 +44,10 @@ export class IsometricEntityManager {
     }
 
     return null;
+  }
+
+  public refreshPositions() {
+    this.entities.forEach(e => e.recalcSizeAndPosition())
   }
 
 }

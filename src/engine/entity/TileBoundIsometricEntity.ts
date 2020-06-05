@@ -62,7 +62,6 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
   private recalcZIndex() {
     const tileZIndex = this.currentTiles ? Math.max(...this.currentTiles.map(t => t.getZIndex())) : 0;
     this.zIndex = this.subTileZIndex + tileZIndex;
-    console.log('recalc: ' + this.zIndex);
     this.drawableManager.refreshZIndexesOnNextUpdate();
   }
 
@@ -88,7 +87,7 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
     this.recalcSizeAndPosition();
   }
 
-  private recalcSizeAndPosition() {
+  public recalcSizeAndPosition() {
     const tile = this.currentOriginTile;
     if (!tile || !this.tileFootprint || !this.board) {
       return;
