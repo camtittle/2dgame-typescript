@@ -21,8 +21,15 @@
       margin: 0;
     }
 
-    canvas {
-      /*height: 100%;*/
+    .hidden {
+      display: none;
+    }
+
+    #welcomeScreen {
+      width: 100%;
+    }
+
+    #gameCanvas {
       width: 100%;
       cursor: pointer;
     }
@@ -36,7 +43,12 @@
 <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
 <![endif]-->
 
-<canvas id="gameCanvas" width="1200" height="1080"></canvas>
+<div id="welcomeScreen">
+  <input id="nicknameInput" type="text" placeholder="Enter a nickname" />
+  <button id="joinButton">Join</button>
+</div>
+
+<canvas id="gameCanvas" class="hidden" width="1200" height="1080"></canvas>
 
 <script src="./bundle.js"></script>
 
