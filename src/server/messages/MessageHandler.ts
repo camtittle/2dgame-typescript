@@ -19,12 +19,12 @@ export class ServerMessageHandler {
     }
   }
 
-  handlePlayerConnect(clientId: string) {
+  handlePlayerConnect(clientId: string, username: string) {
     const currentPlayers = this.entityManager.entities.filter(e => e instanceof Hamster);
-    this.messageSender.sendConnectionResponse(currentPlayers, clientId);
+    this.messageSender.sendConnectionResponse(currentPlayers as Hamster[], clientId, username);
 
     const startingPosition: Position = {x: 0, y: 0};
-    const hamster = this.entitySpawner.spawnHamsterNonPlayable(clientId, startingPosition);
+    const hamster = this.entitySpawner.spawnHamsterNonPlayable(clientId, username, startingPosition);
     this.messageSender.broadcastNewPlayer(hamster);
   }
 

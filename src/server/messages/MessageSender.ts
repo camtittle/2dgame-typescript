@@ -11,12 +11,14 @@ export class MessageSender {
 
   constructor(private websocketServer: WebsocketServer) {}
 
-  sendConnectionResponse(currentPlayers: TileBoundIsometricEntity[], clientId: string) {
+  sendConnectionResponse(currentPlayers: Hamster[], clientId: string, username: string) {
     const response: ConnectionResponse = {
       messageType: MessageType.ConnectionResponse,
       clientId: clientId,
+      username: username,
       players: currentPlayers.map(p => ({
         id: p.id,
+        username: p.getUsername(),
         originTileCoords: p.getCurrentTile().getCoords()
       }))
     };
@@ -27,6 +29,7 @@ export class MessageSender {
     const newPlayerNotification: NewPlayer = {
       messageType: MessageType.NewPlayer,
       id: player.id,
+      username: player.getUsername(),
       originTileCoords: player.getCurrentTile().getCoords()
     };
     this.websocketServer.sendToAll(JSON.stringify(newPlayerNotification), player.id);

@@ -1,25 +1,30 @@
 import {BeanGame} from "./BeanGame";
 import {ClientNetworkManager} from "../engine/network/ClientNetworkManager";
 import {config} from "./config";
-import {HamsterFactory} from "./factory/HamsterFactory";
-import {Orientation} from "../engine/entity/Orientation";
 import {MessageHandler} from "./network/MessageHandler";
 import {Message} from "./network/Message";
 
 export class BeanGameClient extends BeanGame {
 
-  constructor(canvasElementId: string) {
+  username: string;
+
+  constructor(canvasElementId: string, username: string) {
     super(false, canvasElementId);
+    this.username = username;
   }
 
   async initialise(): Promise<void> {
     await super.initialise();
-    console.log('BeanGameClient init');
     this.initNetwork();
   }
 
   private initNetwork() {
-    const networkManager = new ClientNetworkManager(config.websocketUrl);
+    if (!this.username) {
+      throw new Error('Cannot initialise connection. No username provided');
+    }
+
+    const url = config.websocketUrl + '?username=' + this.username;
+    const networkManager = new ClientNetworkManager(url);
     const messageHandler = new MessageHandler(this.entitySpawner, this.entityManager, networkManager);
 
     networkManager.onReceiveListener = msg => {

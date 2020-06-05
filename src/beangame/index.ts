@@ -22,6 +22,6 @@ function showWelcomeScreen() {
 
 function launchGameClient(username: string) {
   document.getElementById(canvasElementId).classList.remove('hidden');
-  const game = new BeanGameClient(canvasElementId);
+  const game = new BeanGameClient(canvasElementId, username);
   game.boot();
 }

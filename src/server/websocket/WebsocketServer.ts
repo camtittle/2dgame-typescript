@@ -1,5 +1,6 @@
 import * as ws from 'ws';
 import { v4 as uuidv4 } from 'uuid';
+import http from 'http';
 
 export class WebsocketServer {
 
@@ -7,7 +8,7 @@ export class WebsocketServer {
   private port = 8080;
 
   private onConnectionListeners: ConnectEventListener[] = [];
-  private onDisconnectListeners: ConnectEventListener[] = [];
+  private onDisconnectListeners: DisconnectEventListener[] = [];
   private onReceiveMessageListeners: ReceiveMessageEventListener[] = [];
 
 
@@ -18,7 +19,7 @@ export class WebsocketServer {
     this.server.on('connection', (socket, request) => {
       socket.id = uuidv4();
       console.log('Connection received with ID: ' + socket.id);
-      this.onConnectionListeners.forEach(listener => listener(socket));
+      this.onConnectionListeners.forEach(listener => listener(socket, request));
 
       socket.on('message', (msg) => {
         console.log(`Received message from user ${socket.id}. Message contents: ${msg} `);
@@ -36,7 +37,7 @@ export class WebsocketServer {
     this.onConnectionListeners.push(listener);
   }
 
-  addOnDisconnectListener(listener: ConnectEventListener) {
+  addOnDisconnectListener(listener: DisconnectEventListener) {
     this.onDisconnectListeners.push(listener);
   }
 
@@ -62,5 +63,6 @@ export class WebsocketServer {
 
 }
 
-type ConnectEventListener = (socket: ws.Client) => void;
+type ConnectEventListener = (socket: ws.Client, request: http.IncomingMessage) => void;
+type DisconnectEventListener = (socket: ws.Client) => void;
 type ReceiveMessageEventListener = (socket: ws.Client, msg: any) => void;

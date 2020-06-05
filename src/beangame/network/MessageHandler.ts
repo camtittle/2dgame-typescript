@@ -36,9 +36,9 @@ export class MessageHandler {
   }
 
   private handleConnectionResponse(msg: ConnectionResponse) {
-    this.entitySpawner.spawnHamsterPlayable(msg.clientId, this.networkManager);
+    this.entitySpawner.spawnHamsterPlayable(msg.clientId, msg.username, this.networkManager);
     msg.players.forEach(player => {
-      this.entitySpawner.spawnHamsterNonPlayable(player.id, player.originTileCoords);
+      this.entitySpawner.spawnHamsterNonPlayable(player.id, player.username, player.originTileCoords);
     });
   }
 
@@ -50,7 +50,7 @@ export class MessageHandler {
   }
 
   private handleNewPlayerNotification(msg: NewPlayer) {
-    this.entitySpawner.spawnHamsterNonPlayable(msg.id, msg.originTileCoords);
+    this.entitySpawner.spawnHamsterNonPlayable(msg.id, msg.username, msg.originTileCoords);
   }
 
   private handlePlayerDisconnect(msg: PlayerDisconnect) {

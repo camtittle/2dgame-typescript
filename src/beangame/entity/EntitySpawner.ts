@@ -15,17 +15,19 @@ export class EntitySpawner {
               private tileClickManager: TileClickManager,
               private hamsterFactory: HamsterFactory) {}
 
-  spawnHamsterPlayable(id: string, networkManager: ClientNetworkManager): Hamster {
+  spawnHamsterPlayable(id: string, username: string, networkManager: ClientNetworkManager): Hamster {
     const startingTile = this.board.getTile({x: 0, y: 0});
     const spawnedHamster = this.hamsterFactory.buildHamsterPlayable(id, this.board, startingTile, networkManager);
+    spawnedHamster.setUsername(username);
     this.entityManager.register(spawnedHamster);
     this.tileClickManager.registerHamsterBehaviour(spawnedHamster);
     return spawnedHamster;
   }
 
-  spawnHamsterNonPlayable(id: string, coords: Position): Hamster {
+  spawnHamsterNonPlayable(id: string, username: string, coords: Position): Hamster {
     const startingTile = this.board.getTile(coords);
     const spawnedHamster = this.hamsterFactory.buildHamsterNonPlayable(id, this.board, startingTile);
+    spawnedHamster.setUsername(username);
     this.entityManager.register(spawnedHamster);
     return spawnedHamster;
   }

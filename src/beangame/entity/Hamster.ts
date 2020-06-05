@@ -10,6 +10,7 @@ export class Hamster extends TileBoundIsometricEntity {
 
   private networkManager: ClientNetworkManager;
   private playable = false;
+  private username: string;
 
   resourceId = resourceId.Hamster;
 
@@ -18,6 +19,24 @@ export class Hamster extends TileBoundIsometricEntity {
     this.setZIndex(0.3);
     this.setTileFootprint(1, 1, 1);
     this.setOrientationSupport(OrientationSupport.EightWay);
+  }
+
+  draw(ctx: CanvasRenderingContext2D): void {
+    super.draw(ctx);
+    this.drawNickname(ctx);
+  }
+
+  private drawNickname(ctx: CanvasRenderingContext2D) {
+    ctx.font = "15px Arial";
+    const yPos = this.position.y - 10;
+    const xPos = this.position.x + this.width / 2;
+    const textWidth = ctx.measureText(this.username).width;
+    ctx.fillStyle = 'rgba(0,0,0,0.3)';
+    ctx.fillRect(xPos - (textWidth / 2) - 4, yPos - 14, textWidth + 8, 19);
+
+    ctx.textAlign = "center";
+    ctx.fillStyle = "white";
+    ctx.fillText(this.username, xPos, yPos);
   }
 
   public setNetworkManager(nm: ClientNetworkManager) {
@@ -31,6 +50,14 @@ export class Hamster extends TileBoundIsometricEntity {
   public setDestinationTile(tile: Tile) {
     super.setDestinationTile(tile);
     this.sendLocationUpdateToServer();
+  }
+
+  public setUsername(username: string) {
+    this.username = username;
+  }
+
+  public getUsername(): string {
+    return this.username;
   }
 
   private sendLocationUpdateToServer() {

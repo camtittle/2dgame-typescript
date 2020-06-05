@@ -21,8 +21,15 @@ export class BeanGameServer extends BeanGame {
     const messageSender = new MessageSender(this.server);
     const messageHandler = new ServerMessageHandler(this.entityManager, this.entitySpawner, messageSender);
 
-    this.server.addOnConnectListener(socket => {
-      messageHandler.handlePlayerConnect(socket.id);
+    this.server.addOnConnectListener((socket, request) => {
+      const parts = request.url.split('?username=');
+      if (parts.length < 2) {
+        console.warn('No username found for user ID ' + socket.id);
+        return;
+      }
+      const username = decodeURIComponent(parts[1]);
+      console.log(username);
+      messageHandler.handlePlayerConnect(socket.id, username);
     });
 
     this.server.addOnDisconnectListener(socket => {
