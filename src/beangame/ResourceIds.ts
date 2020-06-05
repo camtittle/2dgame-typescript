@@ -1,4 +1,5 @@
 export enum resourceId {
+  Empty = 'empty',
   Grass = 'grass',
   Sawdust = 'sawdustTile',
   BlueTile = 'blueTile',

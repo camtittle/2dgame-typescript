@@ -56,12 +56,13 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
     }
 
     this.subTileZIndex = z;
-    this.zIndex = z + this.position.x + this.position.y;
+    this.recalcZIndex();
   }
 
   private recalcZIndex() {
-    const tileZIndex = Math.max(...this.currentTiles.map(t => t.getZIndex()));
+    const tileZIndex = this.currentTiles ? Math.max(...this.currentTiles.map(t => t.getZIndex())) : 0;
     this.zIndex = this.subTileZIndex + tileZIndex;
+    console.log('recalc: ' + this.zIndex);
     this.drawableManager.refreshZIndexesOnNextUpdate();
   }
 

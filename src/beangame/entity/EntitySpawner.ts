@@ -16,7 +16,7 @@ export class EntitySpawner {
               private hamsterFactory: HamsterFactory) {}
 
   spawnHamsterPlayable(id: string, username: string, networkManager: ClientNetworkManager): Hamster {
-    const startingTile = this.board.getTile({x: 0, y: 0});
+    const startingTile = this.board.getTile({x: 1, y: 1});
     const spawnedHamster = this.hamsterFactory.buildHamsterPlayable(id, this.board, startingTile, networkManager);
     spawnedHamster.setUsername(username);
     this.entityManager.register(spawnedHamster);

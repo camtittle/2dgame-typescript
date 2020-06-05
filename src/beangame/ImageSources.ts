@@ -9,6 +9,7 @@ export function getImageSources(): ImageSourceMap<resourceId> {
   }
 
   return {
+    [resourceId.Empty]: require('./img/empty.png').default,
     [resourceId.Grass]: require('./img/grass-iso.png').default,
     [resourceId.Sawdust]: require('./img/sawdust.png').default,
     [resourceId.BlueTile]: require('./img/bluetile.png').default,
