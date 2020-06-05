@@ -9,19 +9,19 @@ export function getImageSources(): ImageSourceMap<resourceId> {
   }
 
   return {
-    [resourceId.Grass]: 'res/grass-iso.png',
-    [resourceId.Sawdust]: 'res/sawdust.png',
-    [resourceId.BlueTile]: 'res/bluetile.png',
-    [resourceId.PinkTile]: 'res/pinktile.png',
+    [resourceId.Grass]: require('./img/grass-iso.png').default,
+    [resourceId.Sawdust]: require('./img/sawdust.png').default,
+    [resourceId.BlueTile]: require('./img/bluetile.png').default,
+    [resourceId.PinkTile]: require('./img/pinktile.png').default,
     [resourceId.CageWall]: <ImageSourceMap<Orientation>> {
-      [Orientation.NORTH]: 'res/cage-wall-left.png',
-      [Orientation.WEST]: 'res/cage-wall-east.png',
+      [Orientation.NORTH]: require('./img/cage-wall-north.png').default,
+      [Orientation.WEST]: require('./img/cage-wall-east.png').default,
     },
-    [resourceId.Wheel]: 'res/wheel.png',
-    [resourceId.WheelLarge]: 'res/wheel-large.png',
-    [resourceId.WheelLargeRhs]: 'res/wheel-large-rhs.png',
+    [resourceId.Wheel]: require('./img/wheel.png').default,
+    [resourceId.WheelLarge]: require('./img/wheel-large.png').default,
+    [resourceId.WheelLargeRhs]: require('./img/wheel-large-rhs.png').default,
     [resourceId.Hamster]: require('./img/hamster').default,
-    [resourceId.FoodBowl]: 'res/food-bowl.png',
+    [resourceId.FoodBowl]: require('./img/food-bowl.png').default,
     [resourceId.Ramp]: require('./img/ramp.png').default
   }
 }
