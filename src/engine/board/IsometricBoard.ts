@@ -13,7 +13,7 @@ export class IsometricBoard implements Intersectable {
   private eachTileDimensions: Dimensions;
   private boardDimensions: Dimensions;
   private boardPosition: Position = {x: 0, y: 0};
-  private zoomLevel = 1.5;
+  private zoomLevel = 1.3;
 
   // Keeps track of the set of different elevations that tiles have in the board
   private tileElevations = [0];

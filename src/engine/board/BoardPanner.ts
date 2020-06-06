@@ -9,9 +9,9 @@ import {IsometricEntityManager} from "../entity/IsometricEntityManager";
 export class BoardPanner implements Updatable {
 
   private edgeThresholdPercentage = 0.05;
-  private panInterval = 10;
+  private panIntervalPercent = 0.01;  // configurable
   private currentPanDirection = PanDirection.None;
-
+  private panInterval = 0;
 
   constructor(private board: IsometricBoard,
               private clickManager: ClickManager,
@@ -27,15 +27,20 @@ export class BoardPanner implements Updatable {
 
       const mousePos: Position = {x, y};
       const canvasSize: Dimensions = {width: canvasManager.getWidth(), height: canvasManager.getHeight()};
-      let newPanMode: PanDirection;
 
       if (this.isLeftEdge(mousePos, canvasSize)) {
         this.currentPanDirection = PanDirection.Left;
       } else if (this.isRightEdge(mousePos, canvasSize)) {
         this.currentPanDirection = PanDirection.Right;
+      } else if (this.isTopEdge(mousePos, canvasSize)) {
+        this.currentPanDirection = PanDirection.Up;
+      } else if (this.isBottomEdge(mousePos, canvasSize)) {
+        this.currentPanDirection = PanDirection.Down;
       } else {
         this.currentPanDirection = PanDirection.None;
       }
+
+      this.panInterval = canvasSize.width * this.panIntervalPercent;
 
     });
 
@@ -49,18 +54,30 @@ export class BoardPanner implements Updatable {
     return (canvasSize.width - mouse.x) / canvasSize.width < this.edgeThresholdPercentage;
   }
 
+  private isTopEdge(mouse: Position, canvasSize: Dimensions): boolean {
+    return mouse.y / canvasSize.height < this.edgeThresholdPercentage;
+  }
+
+  private isBottomEdge(mouse: Position, canvasSize: Dimensions): boolean {
+    return (canvasSize.height - mouse.y) / canvasSize.height < this.edgeThresholdPercentage;
+  }
+
   update(progress: number): void {
     const boardPos = this.board.getBoardPosition();
-    if (this.currentPanDirection === PanDirection.Left) {
-      boardPos.x += this.panInterval;
-      this.board.setBoardPosition(boardPos);
-      this.entityManager.refreshPositions();
-    } else if (this.currentPanDirection === PanDirection.Right) {
-      boardPos.x -= this.panInterval;
+
+    let changed = true;
+    switch (this.currentPanDirection) {
+      case PanDirection.Left:  boardPos.x += this.panInterval; break;
+      case PanDirection.Right: boardPos.x -= this.panInterval; break;
+      case PanDirection.Up:    boardPos.y += this.panInterval; break;
+      case PanDirection.Down:  boardPos.y -= this.panInterval; break;
+      default: changed = false;
+    }
+
+    if (changed) {
       this.board.setBoardPosition(boardPos);
       this.entityManager.refreshPositions();
     }
-
   }
 
 }
@@ -68,5 +85,7 @@ export class BoardPanner implements Updatable {
 export enum PanDirection {
   None,
   Left,
-  Right
+  Right,
+  Up,
+  Down
 }
