@@ -5,6 +5,7 @@ import {ImageProvider} from "./ImageProvider";
 import {Intersectable} from "../interface/Intersectable";
 import {MouseBehaviour} from "../interface/MouseBehaviour";
 import {DrawableManager} from "../DrawableManager";
+import {IsometricEntityManager} from "../entity/IsometricEntityManager";
 
 export abstract class SpriteDrawable implements Drawable, Intersectable {
 

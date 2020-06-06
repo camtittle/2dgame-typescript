@@ -23,7 +23,7 @@ export class BeanGame extends Game {
   public async initialise() {
     await super.initialise();
     this.buildBoard();
-    const hamsterSpawner = new HamsterFactory(this.drawableManager, this.imageProvider);
+    const hamsterSpawner = new HamsterFactory(this.entityManager, this.drawableManager, this.imageProvider);
     this.entitySpawner = new EntitySpawner(this.board, this.entityManager, this.drawableManager, this.tileClickManager, hamsterSpawner);
   }
 
@@ -55,7 +55,7 @@ export class BeanGame extends Game {
   private getEntityFactories(): EntityFactories {
     return {
       plainEntity: () => {
-        return new PlainEntity(this.board, this.drawableManager);
+        return new PlainEntity(this.board, this.entityManager, this.drawableManager);
       },
       richEntities: {}
     }

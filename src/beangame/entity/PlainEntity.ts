@@ -2,6 +2,7 @@ import {TileBoundIsometricEntity} from "../../engine/entity/TileBoundIsometricEn
 
 export class PlainEntity extends TileBoundIsometricEntity {
 
+
   protected init() {
     super.init();
     this.setZIndex(0.1);

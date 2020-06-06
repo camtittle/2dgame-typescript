@@ -58,6 +58,10 @@ export class ConfigParser {
         tile.setDepth(tileType.depth);
       }
 
+      if (tileType.walkable !== undefined) {
+        tile.setWalkable(tileType.walkable)
+      }
+
       if (!GameEnvironment.SERVER) {
         const tileResources = this.imageProvider.getImagesByResourceId(tileType.resourceId);
         if (!tileResources) throw new Error("Cannot set resources for tile type " + tileTypeName + ". Does the resourceId correspond to a resource in the ImageProvider?");
@@ -107,6 +111,8 @@ export class ConfigParser {
 
     const resources = this.imageProvider.getImagesByResourceId(config.resourceId);
     entity.setResources(config.resourceId, resources);
+
+    entity.setLabel(config.label);
 
     if (coordinates.orientation) {
       const orientation = orientationConfigMap[coordinates.orientation];

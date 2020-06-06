@@ -7,6 +7,7 @@ export abstract class Tile extends SpriteDrawable {
   private coords: Position;
   private elevation = 0; // in units of half-tileHeight
   private depth = 0;     // in units of half-tileHeight
+  private walkable = true;
 
   constructor(coords: Position, drawableManager: DrawableManager) {
     super(drawableManager);
@@ -58,6 +59,14 @@ export abstract class Tile extends SpriteDrawable {
 
   public getDepth(): number {
     return this.depth;
+  }
+
+  setWalkable(walkable: boolean) {
+    this.walkable = walkable;
+  }
+
+  isWalkable(): boolean {
+    return this.walkable;
   }
 
 

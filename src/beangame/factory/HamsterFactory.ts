@@ -5,10 +5,13 @@ import {IsometricBoard} from "../../engine/board/IsometricBoard";
 import {DrawableManager} from "../../engine/DrawableManager";
 import {ClientNetworkManager} from "../../engine/network/ClientNetworkManager";
 import {Orientation} from "../../engine/entity/Orientation";
+import {IsometricEntityManager} from "../../engine/entity/IsometricEntityManager";
 
 export class HamsterFactory {
 
-  public constructor(private drawableManager: DrawableManager, private imageProvider: ImageProvider) {
+  public constructor(private entityManager: IsometricEntityManager,
+                     private drawableManager: DrawableManager,
+                     private imageProvider: ImageProvider) {
   }
 
   public buildHamsterPlayable(id: string, board: IsometricBoard, startingTile: Tile, networkManager: ClientNetworkManager): Hamster {
@@ -23,7 +26,7 @@ export class HamsterFactory {
   }
 
   private buildHamster(id: string, board: IsometricBoard, startingTile: Tile): Hamster {
-    const hamster = new Hamster(board, this.drawableManager, id);
+    const hamster = new Hamster(board, this.entityManager, this.drawableManager, id);
     hamster.setOriginTile(startingTile);
     hamster.setupResources(this.imageProvider);
     hamster.setOrientation(Orientation.WEST);

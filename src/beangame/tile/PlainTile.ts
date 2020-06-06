@@ -10,7 +10,9 @@ export class PlainTile extends Tile {
     super.init();
 
     this.addMouseEnterBehaviour((x: number, y: number) => {
-      this.setHighlight(true);
+      if (this.isWalkable()) {
+        this.setHighlight(true);
+      }
     });
 
     this.addMouseLeaveBehaviour((x: number, y: number) => {

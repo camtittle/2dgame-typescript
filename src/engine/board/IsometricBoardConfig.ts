@@ -6,7 +6,8 @@ export interface IsometricBoardConfig {
       resourceId: string;
       factoryName: string;
       elevation?: number;
-      depth?: number;
+      depth?: number;    // default 0
+      walkable?: boolean // default true
     }
   },
   plainEntities?: {
@@ -27,6 +28,7 @@ export interface PlainEntityConfig {
     height: number;
     depth: number;
   },
+  label: string,
   resourceId: string,
   originTileCoordinates: OriginTileCoordinates[]
 }

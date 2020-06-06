@@ -8,18 +8,20 @@ import {DrawableManager} from "../../engine/DrawableManager";
 
 export class CageSpawner {
 
-  constructor (private drawableManager: DrawableManager, private imageProvider: ImageProvider) {
+  constructor (private entityManager: IsometricEntityManager,
+               private drawableManager: DrawableManager,
+               private imageProvider: ImageProvider) {
   }
 
   spawnWheel(board: IsometricBoard, tile: Tile) {
-    const wheel = new Wheel(board, this.drawableManager);
+    const wheel = new Wheel(board, this.entityManager, this.drawableManager);
     wheel.setOriginTile(tile);
     wheel.setupResources(this.imageProvider);
     return wheel;
   }
 
   spawnFoodBowl(board: IsometricBoard, tile: Tile) {
-    const bowl = new PlainEntity(board, this.drawableManager);
+    const bowl = new PlainEntity(board, this.entityManager, this.drawableManager);
     bowl.setOriginTile(tile);
     bowl.setupResources(this.imageProvider);
     return bowl;

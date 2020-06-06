@@ -7,11 +7,14 @@ import {TileFootprint} from "../board/TileFootprint";
 import {Orientation, OrientationSupport, OrientationUtils} from "./Orientation";
 import {Position} from "../interface/Position";
 import {DrawableManager} from "../DrawableManager";
+import {IsometricEntityManager} from "./IsometricEntityManager";
 
 export abstract class TileBoundIsometricEntity extends SpriteDrawable implements Updatable {
 
   protected board: IsometricBoard;
   protected readonly _id: string;
+  private label: string;
+  protected entityManager: IsometricEntityManager;
 
   protected currentOriginTile: Tile;
   protected destinationOriginTile: Tile;
@@ -35,8 +38,9 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
 
   get id() { return this._id; }
 
-  constructor(board: IsometricBoard, drawableManager: DrawableManager, id?: string) {
+  constructor(board: IsometricBoard, entityManager: IsometricEntityManager, drawableManager: DrawableManager, id?: string) {
     super(drawableManager);
+    this.entityManager = entityManager;
     this._id = id ? id : uuidv1();
     this.board = board;
     this.init();
@@ -73,7 +77,9 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
   public setDestinationTileCoordinates(position: Position) {
     const tile = this.board.getTile(position);
     if (!tile) throw new Error("Cannot set destination tile. Coordinates out of range: " + JSON.stringify(position));
-    this.setDestinationTile(tile);
+    if (tile.isWalkable()) {
+      this.setDestinationTile(tile);
+    }
   }
 
   public setOriginTileCoordinates(position: Position) {
@@ -145,11 +151,20 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
       }
     }
 
-    this.setOriginTile(this.board.getTile(newCoords));
-
-    if (this._orientationSupport !== OrientationSupport.None) {
-      this.orientateTowardsDestination(currentCoords, newCoords);
+    const newTile = this.board.getTile(newCoords);
+    if (this.canMoveBetweenTiles(this.currentOriginTile, newTile)) {
+      this.setOriginTile(newTile);
+      if (this._orientationSupport !== OrientationSupport.None) {
+        this.orientateTowardsDestination(currentCoords, newCoords);
+      }
+    } else {
+      this.setDestinationTile(this.currentOriginTile); // stop moving
     }
+  }
+
+  // Override this to configure custom constraints
+  protected canMoveBetweenTiles(from: Tile, to: Tile): boolean {
+    return to.isWalkable();
   }
 
   public getCurrentTile(): Tile {
@@ -216,6 +231,14 @@ export abstract class TileBoundIsometricEntity extends SpriteDrawable implements
       // Default orientation to north
       this.orientation = Orientation.NORTH;
     }
+  }
+
+  public setLabel(l: string) {
+    this.label = l;
+  }
+
+  public getLabel(): string {
+    return this.label;
   }
 
 

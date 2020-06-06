@@ -1,5 +1,6 @@
 import {TileBoundIsometricEntity} from "./TileBoundIsometricEntity";
 import {Updatable} from "../interface/Updatable";
+import {Tile} from "../board/Tile";
 
 export class IsometricEntityManager implements Updatable {
 
@@ -44,6 +45,15 @@ export class IsometricEntityManager implements Updatable {
     }
 
     return null;
+  }
+
+  public getEntitiesInTile(tile: Tile): TileBoundIsometricEntity[] {
+    const tc = tile.getCoords();
+    return this.entities.filter(e => {
+      if (!e.getCurrentTile()) return false;
+      const ec = e.getCurrentTile().getCoords();
+      return ec.x === tc.x && ec.y === tc.y;
+    });
   }
 
   public refreshPositions() {

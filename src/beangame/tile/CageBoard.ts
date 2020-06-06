@@ -6,7 +6,8 @@ export const cageBoardConfig: IsometricBoardConfig = {
   tileTypes: {
     empty: {
       resourceId: 'empty',
-      factoryName: 'PlainTile'
+      factoryName: 'PlainTile',
+      walkable: false
     },
     sawdust: {
       resourceId: 'sawdustTile',
@@ -37,6 +38,7 @@ export const cageBoardConfig: IsometricBoardConfig = {
         depth: 3
       },
       resourceId: 'foodBowl',
+      label: 'foodBowl',
       originTileCoordinates: [
         {
           x: 3,
@@ -51,6 +53,7 @@ export const cageBoardConfig: IsometricBoardConfig = {
         depth: 2
       },
       resourceId: 'ramp',
+      label: 'ramp',
       originTileCoordinates: [
         {
           x: 2,
@@ -65,6 +68,7 @@ export const cageBoardConfig: IsometricBoardConfig = {
         depth: 7
       },
       resourceId: 'cageWall',
+      label: 'wall',
       originTileCoordinates: [
         { x: 0, y: 1, orientation:  OrientationConfig.NORTH },
         { x: 0, y: 3, orientation:  OrientationConfig.NORTH },
@@ -78,8 +82,6 @@ export const cageBoardConfig: IsometricBoardConfig = {
         { x: 5, y: 0, orientation:  OrientationConfig.WEST },
         { x: 7, y: 0, orientation:  OrientationConfig.WEST },
         { x: 9, y: 0, orientation:  OrientationConfig.WEST },
-        { x: 11, y: 0, orientation:  OrientationConfig.WEST },
-        { x: 13, y: 0, orientation:  OrientationConfig.WEST },
       ]
     },
   },

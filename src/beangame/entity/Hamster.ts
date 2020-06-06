@@ -39,6 +39,16 @@ export class Hamster extends TileBoundIsometricEntity {
     ctx.fillText(this.username, xPos, yPos);
   }
 
+  protected canMoveBetweenTiles(from: Tile, to: Tile): boolean {
+    return super.canMoveBetweenTiles(from, to) &&
+      (from.getElevation() >= to.getElevation() || this.isWalkingUpRamp(from, to));
+  }
+
+  private isWalkingUpRamp(from: Tile, to: Tile): boolean {
+    return to.getElevation() - from.getElevation() === 1 &&
+      this.entityManager.getEntitiesInTile(from).findIndex(e => e.getLabel() === 'ramp') > -1
+  }
+
   public setNetworkManager(nm: ClientNetworkManager) {
     this.networkManager = nm;
   }
